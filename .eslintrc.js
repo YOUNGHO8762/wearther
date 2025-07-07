@@ -19,9 +19,6 @@ module.exports = {
     'plugin:prettier/recommended',
     'prettier',
   ],
-  parserOptions: {
-    project: './tsconfig.json',
-  },
   rules: {
     'react/react-in-jsx-scope': 'off',
     'react/require-default-props': 'off',
@@ -58,5 +55,8 @@ module.exports = {
     ],
   },
   parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: './tsconfig.json',
+  },
   ignorePatterns: ['**/node_modules/*', '**/.next/*', '**/*.cjs', '**/*.mjs'],
 };
