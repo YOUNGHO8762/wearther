@@ -13,6 +13,11 @@ export interface Main {
   temp_max: number;
 }
 
+export interface Wind {
+  speed: number;
+  deg: number;
+}
+
 export interface WeatherResponse {
   coord: {
     lon: number;
@@ -22,10 +27,7 @@ export interface WeatherResponse {
   base: string;
   main: Main;
   visibility: number;
-  wind: {
-    speed: number;
-    deg: number;
-  };
+  wind: Wind;
   clouds: {
     all: number;
   };

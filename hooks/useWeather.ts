@@ -17,6 +17,7 @@ const useWeather = (geolocation: Geolocation | null) => {
       setWeather({
         main: response.main,
         weather: response.weather[0],
+        wind: response.wind,
       });
     })();
   }, [geolocation]);
