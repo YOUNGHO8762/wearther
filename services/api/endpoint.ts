@@ -1,7 +1,5 @@
-export const WEATHER_BASE_URL = 'https://api.openweathermap.org/data/2.5';
+export const BASE_URL = '/api';
 
 export const WEATHER_URL = '/weather';
 
-export const MAPS_BASE_URL = 'https://maps.googleapis.com/maps/api';
-
-export const GEOCODING_URL = '/geocode/json';
+export const REVERSE_GEOCODE_URL = '/reverse-geocode';
