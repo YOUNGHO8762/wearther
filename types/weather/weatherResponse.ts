@@ -6,11 +6,14 @@ export interface Weather {
 }
 
 export interface Main {
-  temp: number;
-  pressure: number;
+  feels_like: number;
+  grnd_level: number;
   humidity: number;
-  temp_min: number;
+  pressure: number;
+  sea_level: number;
+  temp: number;
   temp_max: number;
+  temp_min: number;
 }
 
 export interface Wind {
