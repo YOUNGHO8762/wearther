@@ -1,3 +1,8 @@
+export interface Geolocation {
+  latitude: number;
+  longitude: number;
+}
+
 export interface ReverseGeocodeResponse {
   plus_code: {
     compound_code: string;

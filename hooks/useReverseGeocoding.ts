@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
-import fetchReverseGeocode from '@/services/geocoding/fetchReverseGeocode';
-import { Geolocation } from '@/types/geolocation/geolocation';
+import { fetchReverseGeocode } from '@/services/geocodingAPI';
+import { Geolocation } from '@/types/geolocation';
 
 export function useReverseGeocoding(geolocation: Geolocation | null) {
   const [address, setAddress] = useState<string | null>(null);

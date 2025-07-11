@@ -1,5 +1,6 @@
 'use client';
 
+import dayjs from 'dayjs';
 import Image from 'next/image';
 
 import { Badge } from '@/components/ui/badge';
@@ -22,14 +23,17 @@ export default function Home() {
     return null;
   }
 
-  const tempForClothing = getTemperatureForClothing(
-    weather.main.temp_min,
-    weather.main.temp_max,
-  );
+  const { current, forecast } = weather;
+
+  const temps = [...forecast.map((item) => item.main.temp), current.main.temp];
+  const tempMin = Math.min(...temps);
+  const tempMax = Math.max(...temps);
+
+  const tempForClothing = getTemperatureForClothing(tempMin, tempMax);
   const apparentTemp = getApparentTemperature(
     tempForClothing,
-    weather.main.humidity,
-    weather.wind.speed,
+    current.main.humidity,
+    current.wind.speed,
   );
   const apparelRecommendation = getApparelRecommendation(apparentTemp);
 
@@ -38,37 +42,40 @@ export default function Home() {
       <Card className="w-[350px] shadow-xl">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <span>오늘의 날씨</span>
+            <span>현재 날씨</span>
             <Badge variant="outline" className="px-2 py-1 text-base">
-              {weather.weather.description}
+              {current.weather.description}
             </Badge>
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="mb-4 flex flex-col items-center gap-2">
             <Image
-              src={`https://openweathermap.org/img/wn/${weather.weather.icon}.png`}
+              src={`https://openweathermap.org/img/wn/${current.weather.icon}.png`}
               alt="weather icon"
               width={64}
               height={64}
               className="mb-2"
             />
-            <div className="text-3xl font-bold">{weather.main.temp}°C</div>
-            <div className="text-sm text-gray-500">
-              (최저 {weather.main.temp_min}° / 최고 {weather.main.temp_max}°)
+            <div className="text-3xl font-bold">
+              {Math.round(current.main.temp)}°C
+            </div>
+            <div className="text-center text-sm text-gray-500">
+              {dayjs(forecast[0].dt_txt).format('HH:mm')} 이후 오늘
+              <br /> (최저 {Math.round(tempMin)}° / 최고 {Math.round(tempMax)}°)
             </div>
             <div className="text-sm text-gray-700">
-              체감온도: {weather.main.feels_like}°C
+              체감온도: {Math.round(current.main.feels_like)}°C
             </div>
           </div>
           <div className="mb-4 flex flex-col gap-1">
             <div className="text-sm">
               습도:{' '}
-              <span className="font-medium">{weather.main.humidity}%</span>
+              <span className="font-medium">{current.main.humidity}%</span>
             </div>
             <div className="text-sm">
               풍속:{' '}
-              <span className="font-medium">{weather.wind.speed} m/s</span>
+              <span className="font-medium">{current.wind.speed} m/s</span>
             </div>
           </div>
           <div className="mb-2">

@@ -24,17 +24,31 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const response = await axios.get(`${WEATHER_BASE_URL}/weather`, {
-      params: {
-        lat: parseFloat(lat),
-        lon: parseFloat(lon),
-        appid: API_KEY,
-        units: 'metric',
-        lang: 'kr',
-      },
-    });
+    const [currentWeatherResponse, forecastResponse] = await Promise.all([
+      axios.get(`${WEATHER_BASE_URL}/weather`, {
+        params: {
+          lat: parseFloat(lat),
+          lon: parseFloat(lon),
+          appid: API_KEY,
+          units: 'metric',
+          lang: 'kr',
+        },
+      }),
+      axios.get(`${WEATHER_BASE_URL}/forecast`, {
+        params: {
+          lat: parseFloat(lat),
+          lon: parseFloat(lon),
+          appid: API_KEY,
+          units: 'metric',
+          lang: 'kr',
+        },
+      }),
+    ]);
 
-    return NextResponse.json(response.data);
+    return NextResponse.json({
+      current: currentWeatherResponse.data,
+      forecast: forecastResponse.data,
+    });
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const status = error.response?.status || 500;

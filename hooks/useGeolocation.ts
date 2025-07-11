@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import type { Geolocation } from '../types/geolocation/geolocation';
+import type { Geolocation } from '@/types/geolocation';
 
 const useGeolocation = () => {
   const [geolocation, setGeolocation] = useState<Geolocation | null>(null);
