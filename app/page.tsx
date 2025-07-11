@@ -61,7 +61,7 @@ export default function Home() {
               {Math.round(current.main.temp)}°C
             </div>
             <div className="text-center text-sm text-gray-500">
-              {dayjs(forecast[0].dt_txt).format('HH:mm')} 이후 오늘
+              {dayjs(forecast[0].dt_txt).format('HH')}시 이후 오늘
               <br /> (최저 {Math.round(tempMin)}° / 최고 {Math.round(tempMax)}°)
             </div>
             <div className="text-sm text-gray-700">
