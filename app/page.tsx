@@ -1,10 +1,16 @@
 'use client';
 
 import dayjs from 'dayjs';
+import { Info } from 'lucide-react';
 import Image from 'next/image';
 
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import useGeolocation from '@/hooks/useGeolocation';
 import { useReverseGeocoding } from '@/hooks/useReverseGeocoding';
 import useWeather from '@/hooks/useWeather';
@@ -61,8 +67,22 @@ export default function Home() {
               {Math.round(current.main.temp)}°C
             </div>
             <div className="text-center text-sm text-gray-500">
-              {dayjs(forecast[0].dt_txt).format('HH')}시 이후 오늘
-              <br /> (최저 {Math.round(tempMin)}° / 최고 {Math.round(tempMax)}°)
+              <p className="flex items-center justify-center">
+                {dayjs(forecast[0].dt_txt).format('HH')}시 이후 오늘
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Info className="mx-1 inline h-4 w-4 text-gray-500" />
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-xs text-center">
+                    <p className="mb-1">OpenWeatherMap의 3시간 단위</p>
+                    <p className="mb-1">예보 데이터를 기반으로 계산됩니다.</p>
+                    <p className="text-xs">
+                      실제 온도와 차이가 있을 수 있습니다.
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </p>
+              (최저 {Math.round(tempMin)}° / 최고 {Math.round(tempMax)}°)
             </div>
             <div className="text-sm text-gray-700">
               체감온도: {Math.round(current.main.feels_like)}°C
@@ -83,7 +103,9 @@ export default function Home() {
             <span className="ml-2 font-medium">{address}</span>
           </div>
           <div>
-            <span className="text-sm text-gray-600">추천 옷차림:</span>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-600">추천 옷차림:</span>
+            </div>
             <div className="mt-1 flex flex-wrap gap-2">
               {apparelRecommendation.map((item) => (
                 <Badge key={item} variant="secondary">
