@@ -1,16 +1,15 @@
 'use client';
 
-import dayjs from 'dayjs';
 import { Info } from 'lucide-react';
 import Image from 'next/image';
 
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from '@/components/ui/hover-card';
 import useGeolocation from '@/hooks/useGeolocation';
 import { useReverseGeocoding } from '@/hooks/useReverseGeocoding';
 import useWeather from '@/hooks/useWeather';
@@ -20,10 +19,15 @@ import {
   getTemperatureForClothing,
 } from '@/lib/utils';
 
+const DEFAULT_LOCATION = {
+  latitude: 37.552987017,
+  longitude: 126.972591728,
+};
+
 export default function Home() {
-  const geolocation = useGeolocation();
-  const weather = useWeather(geolocation);
-  const address = useReverseGeocoding(geolocation);
+  const { geolocation, isError } = useGeolocation();
+  const weather = useWeather(isError ? DEFAULT_LOCATION : geolocation);
+  const address = useReverseGeocoding(isError ? DEFAULT_LOCATION : geolocation);
 
   if (!weather || !address) {
     return null;
@@ -68,19 +72,23 @@ export default function Home() {
             </div>
             <div className="text-center text-sm text-gray-500">
               <p className="flex items-center justify-center">
-                {dayjs(forecast[0].dt_txt).format('HH')}시 이후 오늘
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Info className="mx-1 inline h-4 w-4 text-gray-500" />
-                  </TooltipTrigger>
-                  <TooltipContent className="max-w-xs text-center">
-                    <p className="mb-1">OpenWeatherMap의 3시간 단위</p>
-                    <p className="mb-1">예보 데이터를 기반으로 계산됩니다.</p>
-                    <p className="text-xs">
-                      실제 온도와 차이가 있을 수 있습니다.
-                    </p>
-                  </TooltipContent>
-                </Tooltip>
+                <HoverCard>
+                  <HoverCardTrigger asChild tabIndex={0}>
+                    <Info className="mr-1 inline h-4 w-4 text-gray-500" />
+                  </HoverCardTrigger>
+                  <HoverCardContent className="w-80">
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-semibold">
+                        예보 데이터 안내
+                      </h4>
+                      <p className="text-muted-foreground text-sm">
+                        3시간 단위 예보 데이터를 기반으로 계산됩니다. 실제
+                        온도와 차이가 있을 수 있습니다.
+                      </p>
+                    </div>
+                  </HoverCardContent>
+                </HoverCard>
+                현재부터 오늘의
               </p>
               (최저 {Math.round(tempMin)}° / 최고 {Math.round(tempMax)}°)
             </div>
@@ -98,8 +106,8 @@ export default function Home() {
               <span className="font-medium">{current.wind.speed} m/s</span>
             </div>
           </div>
-          <div className="mb-2">
-            <span className="text-sm text-gray-600">위치:</span>
+          <div className="mb-2 text-sm">
+            <span className="text-gray-600">위치:</span>
             <span className="ml-2 font-medium">{address}</span>
           </div>
           <div>
