@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
+import { extractErrorMessage } from '@/lib/utils';
 import { fetchReverseGeocode } from '@/services/geocodingAPI';
 import { Geolocation } from '@/types/geolocation';
 
@@ -12,8 +14,12 @@ export function useReverseGeocoding(geolocation: Geolocation | null) {
     }
 
     (async () => {
-      const response = await fetchReverseGeocode(geolocation);
-      setAddress(response.results[0].address_components[1].short_name);
+      try {
+        const response = await fetchReverseGeocode(geolocation);
+        setAddress(response.results[0].address_components[1].short_name);
+      } catch (error) {
+        toast.error(extractErrorMessage(error));
+      }
     })();
   }, [geolocation]);
 

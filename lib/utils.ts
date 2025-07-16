@@ -177,3 +177,22 @@ export function getHealthRiskLevel(apparentTemp: number): {
     recommendation: '일상 활동 가능',
   };
 }
+
+export function extractErrorMessage(
+  error: unknown,
+  defaultMessage: string = '오류가 발생했습니다.',
+): string {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  if (typeof error === 'string') {
+    return error;
+  }
+
+  if (error && typeof error === 'object' && 'message' in error) {
+    return String(error.message);
+  }
+
+  return defaultMessage;
+}

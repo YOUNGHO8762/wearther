@@ -19,15 +19,10 @@ import {
   getTemperatureForClothing,
 } from '@/lib/utils';
 
-const DEFAULT_LOCATION = {
-  latitude: 37.552987017,
-  longitude: 126.972591728,
-};
-
 export default function Home() {
-  const { geolocation, isError } = useGeolocation();
-  const weather = useWeather(isError ? DEFAULT_LOCATION : geolocation);
-  const address = useReverseGeocoding(isError ? DEFAULT_LOCATION : geolocation);
+  const geolocation = useGeolocation();
+  const weather = useWeather(geolocation);
+  const address = useReverseGeocoding(geolocation);
 
   if (!weather || !address) {
     return null;

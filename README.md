@@ -1,10 +1,10 @@
 # wearther
 
-내가 보려고 만든, 온도별 옷차림 추천 서비스
+내가 보려고 만든 온도별 옷차림 추천 서비스
 
 ## 배포
 
-https://youngho8762-wearther.vercel.app/
+https://youngho8762-wearther.vercel.app
 
 ## 의존성 설치
 
