@@ -1,6 +1,12 @@
 import axios from 'axios';
 import { NextRequest, NextResponse } from 'next/server';
 
+import {
+  createAPIKeyErrorResponse,
+  createCatchErrorResponse,
+  createParamsErrorResponse,
+} from '@/lib/serverUtils';
+
 const WEATHER_BASE_URL = 'https://api.openweathermap.org/data/2.5';
 const API_KEY = process.env.WEATHER_API_KEY;
 
@@ -11,17 +17,11 @@ export async function GET(request: NextRequest) {
     const lon = searchParams.get('lon');
 
     if (!lat || !lon) {
-      return NextResponse.json(
-        { error: '위도(lat)와 경도(lon) 파라미터가 필요합니다.' },
-        { status: 400 },
-      );
+      return createParamsErrorResponse(['위도', '경도']);
     }
 
     if (!API_KEY) {
-      return NextResponse.json(
-        { error: 'Weather API 키가 설정되지 않았습니다.' },
-        { status: 500 },
-      );
+      return createAPIKeyErrorResponse('Weather API');
     }
 
     const [currentWeatherResponse, forecastResponse] = await Promise.all([
@@ -50,18 +50,6 @@ export async function GET(request: NextRequest) {
       forecast: forecastResponse.data,
     });
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      const status = error.response?.status || 500;
-      const message =
-        error.response?.data?.message ||
-        '날씨 정보를 가져오는 중 오류가 발생했습니다.';
-
-      return NextResponse.json({ error: message }, { status });
-    }
-
-    return NextResponse.json(
-      { error: '서버 내부 오류가 발생했습니다.' },
-      { status: 500 },
-    );
+    return createCatchErrorResponse(error);
   }
 }
