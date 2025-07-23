@@ -3,7 +3,7 @@ export interface Geolocation {
   longitude: number;
 }
 
-export interface ReverseGeocodeResponse {
+export interface FetchReverseGeocodeResponse {
   plus_code: {
     compound_code: string;
     global_code: string;

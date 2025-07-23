@@ -23,7 +23,9 @@ npm run dev
 프로젝트 루트에 `.env` 파일을 생성하고 다음 변수들을 설정하세요:
 
 ```env
+# OpenWeatherMap API Key
 WEATHER_API_KEY=
 
-REVERSE_GEOCODING_API_KEY=
+# Google Maps Platform API Key
+MAP_API_KEY=
 ```

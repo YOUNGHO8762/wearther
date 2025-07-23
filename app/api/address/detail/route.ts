@@ -4,9 +4,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import {
   createAPIKeyErrorResponse,
   createCatchErrorResponse,
-  createErrorResponse,
   createParamsErrorResponse,
 } from '@/lib/serverUtils';
+import { FetchAddressDetailsResponse } from '@/types/address';
 
 const PLACES_DETAILS_URL =
   'https://maps.googleapis.com/maps/api/place/details/json';
@@ -32,11 +32,10 @@ export async function GET(request: NextRequest) {
       fields: 'geometry',
     };
 
-    const response = await axios.get(PLACES_DETAILS_URL, { params });
-
-    if (response.data.status !== 'OK') {
-      return createErrorResponse(response.data.error_message, 400);
-    }
+    const response = await axios.get<FetchAddressDetailsResponse>(
+      PLACES_DETAILS_URL,
+      { params },
+    );
 
     return NextResponse.json(response.data);
   } catch (error) {

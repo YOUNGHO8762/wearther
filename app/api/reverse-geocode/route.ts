@@ -4,9 +4,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import {
   createAPIKeyErrorResponse,
   createCatchErrorResponse,
-  createErrorResponse,
   createParamsErrorResponse,
 } from '@/lib/serverUtils';
+import { FetchReverseGeocodeResponse } from '@/types/geolocation';
 
 const GEOCODING_BASE_URL = 'https://maps.googleapis.com/maps/api/geocode/json';
 const API_KEY = process.env.MAP_API_KEY;
@@ -25,17 +25,16 @@ export async function GET(request: NextRequest) {
       return createAPIKeyErrorResponse('Map API');
     }
 
-    const response = await axios.get(GEOCODING_BASE_URL, {
-      params: {
-        latlng: `${lat},${lon}`,
-        key: API_KEY,
-        language: 'ko',
+    const response = await axios.get<FetchReverseGeocodeResponse>(
+      GEOCODING_BASE_URL,
+      {
+        params: {
+          latlng: `${lat},${lon}`,
+          key: API_KEY,
+          language: 'ko',
+        },
       },
-    });
-
-    if (response.data.status !== 'OK') {
-      return createErrorResponse(response.data.error_message, 400);
-    }
+    );
 
     return NextResponse.json(response.data);
   } catch (error) {

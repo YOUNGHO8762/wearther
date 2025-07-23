@@ -6,6 +6,7 @@ import {
   createCatchErrorResponse,
   createParamsErrorResponse,
 } from '@/lib/serverUtils';
+import { FetchWeatherResponse } from '@/types/weather';
 
 const WEATHER_BASE_URL = 'https://api.openweathermap.org/data/2.5';
 const API_KEY = process.env.WEATHER_API_KEY;
@@ -25,24 +26,30 @@ export async function GET(request: NextRequest) {
     }
 
     const [currentWeatherResponse, forecastResponse] = await Promise.all([
-      axios.get(`${WEATHER_BASE_URL}/weather`, {
-        params: {
-          lat: parseFloat(lat),
-          lon: parseFloat(lon),
-          appid: API_KEY,
-          units: 'metric',
-          lang: 'kr',
+      axios.get<FetchWeatherResponse['current']>(
+        `${WEATHER_BASE_URL}/weather`,
+        {
+          params: {
+            lat: parseFloat(lat),
+            lon: parseFloat(lon),
+            appid: API_KEY,
+            units: 'metric',
+            lang: 'kr',
+          },
         },
-      }),
-      axios.get(`${WEATHER_BASE_URL}/forecast`, {
-        params: {
-          lat: parseFloat(lat),
-          lon: parseFloat(lon),
-          appid: API_KEY,
-          units: 'metric',
-          lang: 'kr',
+      ),
+      axios.get<FetchWeatherResponse['forecast']>(
+        `${WEATHER_BASE_URL}/forecast`,
+        {
+          params: {
+            lat: parseFloat(lat),
+            lon: parseFloat(lon),
+            appid: API_KEY,
+            units: 'metric',
+            lang: 'kr',
+          },
         },
-      }),
+      ),
     ]);
 
     return NextResponse.json({

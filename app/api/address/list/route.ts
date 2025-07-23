@@ -4,9 +4,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import {
   createAPIKeyErrorResponse,
   createCatchErrorResponse,
-  createErrorResponse,
   createParamsErrorResponse,
 } from '@/lib/serverUtils';
+import { FetchSearchAddressResponse } from '@/types/address';
 
 const PLACES_AUTOCOMPLETE_URL =
   'https://maps.googleapis.com/maps/api/place/autocomplete/json';
@@ -33,11 +33,10 @@ export async function GET(request: NextRequest) {
       components: 'country:kr',
     };
 
-    const response = await axios.get(PLACES_AUTOCOMPLETE_URL, { params });
-
-    if (response.data.status !== 'OK') {
-      return createErrorResponse(response.data.error_message, 400);
-    }
+    const response = await axios.get<FetchSearchAddressResponse>(
+      PLACES_AUTOCOMPLETE_URL,
+      { params },
+    );
 
     return NextResponse.json(response.data);
   } catch (error) {

@@ -41,8 +41,8 @@ export function createServerErrorResponse(
 export function createCatchErrorResponse(error: unknown) {
   if (isAxiosError(error)) {
     return createErrorResponse(
-      error.response?.data.message ??
-        error.message ??
+      error.response?.data.error_message ??
+        error.response?.data.message ??
         DEFAULT_SERVER_ERROR_MESSAGE,
       error.response?.status ?? 500,
     );
