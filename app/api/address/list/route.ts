@@ -6,7 +6,7 @@ import {
   createCatchErrorResponse,
   createParamsErrorResponse,
 } from '@/lib/serverUtils';
-import { FetchSearchAddressResponse } from '@/types/address';
+import { FetchAddressSearchResponse } from '@/types/address';
 
 const PLACES_AUTOCOMPLETE_URL =
   'https://maps.googleapis.com/maps/api/place/autocomplete/json';
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
       components: 'country:kr',
     };
 
-    const response = await axios.get<FetchSearchAddressResponse>(
+    const response = await axios.get<FetchAddressSearchResponse>(
       PLACES_AUTOCOMPLETE_URL,
       { params },
     );

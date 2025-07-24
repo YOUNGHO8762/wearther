@@ -30,8 +30,8 @@ export async function GET(request: NextRequest) {
         `${WEATHER_BASE_URL}/weather`,
         {
           params: {
-            lat: parseFloat(lat),
-            lon: parseFloat(lon),
+            lat,
+            lon,
             appid: API_KEY,
             units: 'metric',
             lang: 'kr',
@@ -42,8 +42,8 @@ export async function GET(request: NextRequest) {
         `${WEATHER_BASE_URL}/forecast`,
         {
           params: {
-            lat: parseFloat(lat),
-            lon: parseFloat(lon),
+            lat,
+            lon,
             appid: API_KEY,
             units: 'metric',
             lang: 'kr',

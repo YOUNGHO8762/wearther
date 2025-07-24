@@ -5,11 +5,11 @@ import {
 import { apiClient } from '@/services/api/httpClient';
 import {
   FetchAddressDetailsResponse,
-  FetchSearchAddressResponse,
+  FetchAddressSearchResponse,
 } from '@/types/address';
 
-export const fetchSearchAddress = async (input: string) => {
-  const response = await apiClient.get<FetchSearchAddressResponse>(
+export const fetchAddressSearch = async (input: string) => {
+  const response = await apiClient.get<FetchAddressSearchResponse>(
     SEARCH_ADDRESS_URL,
     {
       params: {
@@ -17,7 +17,7 @@ export const fetchSearchAddress = async (input: string) => {
       },
     },
   );
-  return response;
+  return response.predictions;
 };
 
 export const fetchAddressDetails = async (placeID: string) => {

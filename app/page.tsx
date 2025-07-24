@@ -2,7 +2,9 @@
 
 import { Info } from 'lucide-react';
 import Image from 'next/image';
+// import { overlay } from 'overlay-kit';
 
+// import AddressSearchDialog from '@/components/AddressSearchDialog';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
