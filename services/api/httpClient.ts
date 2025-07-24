@@ -1,6 +1,10 @@
 import axios, { AxiosRequestConfig, CreateAxiosDefaults } from 'axios';
 
-import { BASE_URL } from '@/services/api/endpoint';
+import {
+  BASE_URL,
+  MAP_BASE_URL,
+  WEATHER_BASE_URL,
+} from '@/services/api/endpoint';
 
 class HttpClient {
   private instance;
@@ -17,4 +21,12 @@ class HttpClient {
 
 export const apiClient = new HttpClient({
   baseURL: BASE_URL,
+});
+
+export const mapApiClient = new HttpClient({
+  baseURL: MAP_BASE_URL,
+});
+
+export const weatherApiClient = new HttpClient({
+  baseURL: WEATHER_BASE_URL,
 });

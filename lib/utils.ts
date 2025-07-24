@@ -201,3 +201,39 @@ export function extractErrorMessage(
 
   return defaultMessage;
 }
+
+export function isValidLatitude(latitude: string | null): boolean {
+  if (!latitude || latitude.trim() === '') {
+    return false;
+  }
+
+  const lat = parseFloat(latitude);
+
+  if (Number.isNaN(lat)) {
+    return false;
+  }
+
+  if (lat < -90 || lat > 90) {
+    return false;
+  }
+
+  return true;
+}
+
+export function isValidLongitude(longitude: string | null): boolean {
+  if (!longitude || longitude.trim() === '') {
+    return false;
+  }
+
+  const lng = parseFloat(longitude);
+
+  if (Number.isNaN(lng)) {
+    return false;
+  }
+
+  if (lng < -180 || lng > 180) {
+    return false;
+  }
+
+  return true;
+}

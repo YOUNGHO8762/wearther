@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { NextRequest, NextResponse } from 'next/server';
 
 import {
@@ -6,9 +5,11 @@ import {
   createCatchErrorResponse,
   createParamsErrorResponse,
 } from '@/lib/serverUtils';
+import { isValidLatitude, isValidLongitude } from '@/lib/utils';
+import { GEOCODING_URL } from '@/services/api/endpoint';
+import { mapApiClient } from '@/services/api/httpClient';
 import { FetchReverseGeocodeResponse } from '@/types/geolocation';
 
-const GEOCODING_BASE_URL = 'https://maps.googleapis.com/maps/api/geocode/json';
 const API_KEY = process.env.MAP_API_KEY;
 
 export async function GET(request: NextRequest) {
@@ -17,7 +18,7 @@ export async function GET(request: NextRequest) {
     const lat = searchParams.get('lat');
     const lon = searchParams.get('lon');
 
-    if (!lat || !lon) {
+    if (!isValidLatitude(lat) || !isValidLongitude(lon)) {
       return createParamsErrorResponse(['위도', '경도']);
     }
 
@@ -25,8 +26,8 @@ export async function GET(request: NextRequest) {
       return createAPIKeyErrorResponse('Map API');
     }
 
-    const response = await axios.get<FetchReverseGeocodeResponse>(
-      GEOCODING_BASE_URL,
+    const response = await mapApiClient.get<FetchReverseGeocodeResponse>(
+      GEOCODING_URL,
       {
         params: {
           latlng: `${lat},${lon}`,
@@ -36,7 +37,7 @@ export async function GET(request: NextRequest) {
       },
     );
 
-    return NextResponse.json(response.data);
+    return NextResponse.json(response);
   } catch (error) {
     return createCatchErrorResponse(error);
   }

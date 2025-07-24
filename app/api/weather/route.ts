@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { NextRequest, NextResponse } from 'next/server';
 
 import {
@@ -6,9 +5,11 @@ import {
   createCatchErrorResponse,
   createParamsErrorResponse,
 } from '@/lib/serverUtils';
+import { isValidLatitude, isValidLongitude } from '@/lib/utils';
+import { FORECAST_URL, WEATHER_URL } from '@/services/api/endpoint';
+import { weatherApiClient } from '@/services/api/httpClient';
 import { FetchWeatherResponse } from '@/types/weather';
 
-const WEATHER_BASE_URL = 'https://api.openweathermap.org/data/2.5';
 const API_KEY = process.env.WEATHER_API_KEY;
 
 export async function GET(request: NextRequest) {
@@ -17,7 +18,7 @@ export async function GET(request: NextRequest) {
     const lat = searchParams.get('lat');
     const lon = searchParams.get('lon');
 
-    if (!lat || !lon) {
+    if (!isValidLatitude(lat) || !isValidLongitude(lon)) {
       return createParamsErrorResponse(['위도', '경도']);
     }
 
@@ -25,36 +26,26 @@ export async function GET(request: NextRequest) {
       return createAPIKeyErrorResponse('Weather API');
     }
 
+    const params = {
+      lat,
+      lon,
+      appid: API_KEY,
+      units: 'metric',
+      lang: 'kr',
+    };
+
     const [currentWeatherResponse, forecastResponse] = await Promise.all([
-      axios.get<FetchWeatherResponse['current']>(
-        `${WEATHER_BASE_URL}/weather`,
-        {
-          params: {
-            lat,
-            lon,
-            appid: API_KEY,
-            units: 'metric',
-            lang: 'kr',
-          },
-        },
-      ),
-      axios.get<FetchWeatherResponse['forecast']>(
-        `${WEATHER_BASE_URL}/forecast`,
-        {
-          params: {
-            lat,
-            lon,
-            appid: API_KEY,
-            units: 'metric',
-            lang: 'kr',
-          },
-        },
-      ),
+      weatherApiClient.get<FetchWeatherResponse['current']>(WEATHER_URL, {
+        params,
+      }),
+      weatherApiClient.get<FetchWeatherResponse['forecast']>(FORECAST_URL, {
+        params,
+      }),
     ]);
 
     return NextResponse.json({
-      current: currentWeatherResponse.data,
-      forecast: forecastResponse.data,
+      current: currentWeatherResponse,
+      forecast: forecastResponse,
     });
   } catch (error) {
     return createCatchErrorResponse(error);
