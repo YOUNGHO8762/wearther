@@ -16,7 +16,7 @@ export function useReverseGeocoding(geolocation: Geolocation | null) {
     (async () => {
       try {
         const response = await fetchReverseGeocode(geolocation);
-        setAddress(response.results[0].address_components[1].short_name);
+        setAddress(response.results[0].formatted_address);
       } catch (error) {
         toast.error(extractErrorMessage(error));
       }

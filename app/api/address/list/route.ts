@@ -29,7 +29,6 @@ export async function GET(request: NextRequest) {
       key: API_KEY,
       language: 'ko',
       types: 'geocode',
-      components: 'country:kr',
     };
 
     const response = await mapApiClient.get<FetchAddressSearchResponse>(

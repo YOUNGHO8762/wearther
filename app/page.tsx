@@ -1,11 +1,12 @@
 'use client';
 
-import { Info } from 'lucide-react';
+import { Info, MapPin, Search } from 'lucide-react';
 import Image from 'next/image';
-// import { overlay } from 'overlay-kit';
+import { overlay } from 'overlay-kit';
 
-// import AddressSearchDialog from '@/components/AddressSearchDialog';
+import AddressSearchDialog from '@/components/AddressSearchDialog';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   HoverCard,
@@ -22,7 +23,7 @@ import {
 } from '@/lib/utils';
 
 export default function Home() {
-  const geolocation = useGeolocation();
+  const { geolocation, handleSetGeolocation } = useGeolocation();
   const weather = useWeather(geolocation);
   const address = useReverseGeocoding(geolocation);
 
@@ -93,25 +94,35 @@ export default function Home() {
               체감온도: {Math.round(current.main.feels_like)}°C
             </div>
           </div>
-          <div className="mb-4 flex flex-col gap-1">
-            <div className="text-sm">
-              습도:{' '}
-              <span className="font-medium">{current.main.humidity}%</span>
+          <div className="space-y-1">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1">
+                <MapPin className="h-4 w-4 text-gray-500" />
+                <span className="text-sm text-gray-600">{address}</span>
+              </div>
             </div>
-            <div className="text-sm">
-              풍속:{' '}
-              <span className="font-medium">{current.wind.speed} m/s</span>
-            </div>
-          </div>
-          <div className="mb-2 text-sm">
-            <span className="text-gray-600">위치:</span>
-            <span className="ml-2 font-medium">{address}</span>
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600">추천 옷차림:</span>
-            </div>
-            <div className="mt-1 flex flex-wrap gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                overlay.open(({ isOpen, close, unmount }) => (
+                  <AddressSearchDialog
+                    isOpen={isOpen}
+                    close={close}
+                    onExit={unmount}
+                    handleSetGeolocation={handleSetGeolocation}
+                  />
+                ));
+              }}
+              aria-label="위치 변경"
+            >
+              <Search className="h-3.5 w-3.5" />
+              위치 변경
+            </Button>
+            <p className="text-sm">습도 : {current.main.humidity}%</p>
+            <p className="text-sm">풍속 : {current.wind.speed} m/s</p>
+            <div className="flex flex-wrap gap-1">
               {apparelRecommendation.map((item) => (
                 <Badge key={item} variant="secondary">
                   {item}

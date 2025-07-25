@@ -45,7 +45,11 @@ const useGeolocation = () => {
     navigator.geolocation.getCurrentPosition(handleSuccess, handleError);
   }, []);
 
-  return geolocation;
+  const handleSetGeolocation = (geolocation: Geolocation) => {
+    setGeolocation(geolocation);
+  };
+
+  return { geolocation, handleSetGeolocation };
 };
 
 export default useGeolocation;
