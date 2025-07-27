@@ -1,15 +1,13 @@
 'use client';
 
-import { useState } from 'react';
-
-import { Button } from '@/components/ui/button';
+import AddressSearchForm from '@/components/AddressSearchForm';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
+import useInputState from '@/hooks/useInputState';
 import useSearchAddress from '@/hooks/useSearchAddress';
 import { ADDRESS_DETAILS_URL } from '@/services/api/endpoint';
 import { apiClient } from '@/services/api/httpClient';
@@ -29,24 +27,13 @@ export default function AddressSearchDialog({
   onExit,
   handleSetGeolocation,
 }: Props) {
-  const [enterTerm, setEnterTerm] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, handleSearchTermChange] = useInputState('');
   const searchResults = useSearchAddress(searchTerm);
 
   const handleAnimationEnd = () => {
     if (!isOpen) {
       onExit();
     }
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!enterTerm.trim() || searchTerm === enterTerm) {
-      return;
-    }
-
-    setSearchTerm(enterTerm);
   };
 
   const handleAddressSelect = async (placeId: string) => {
@@ -68,17 +55,7 @@ export default function AddressSearchDialog({
           <DialogTitle>주소 검색</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
-          <form onSubmit={handleSubmit} className="flex items-center gap-2">
-            <Input
-              placeholder="주소를 입력하세요"
-              value={enterTerm}
-              onChange={(e) => setEnterTerm(e.target.value)}
-              autoFocus
-            />
-            <Button type="submit" disabled={!enterTerm.trim()}>
-              검색
-            </Button>
-          </form>
+          <AddressSearchForm handleSearchTermChange={handleSearchTermChange} />
           {searchResults && !searchResults?.length && (
             <div className="text-muted-foreground py-4 text-center">
               검색 결과가 없습니다.

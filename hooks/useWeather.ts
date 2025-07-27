@@ -28,7 +28,7 @@ const filterTodayForecast = (
   return forecastList.filter((item) => isTodayAfter(item.dt_txt));
 };
 
-const useWeather = (geolocation: Geolocation | null) => {
+export default function useWeather(geolocation: Geolocation | null) {
   const [weather, setWeather] = useState<WeatherState | null>(null);
 
   useEffect(() => {
@@ -54,6 +54,4 @@ const useWeather = (geolocation: Geolocation | null) => {
   }, [geolocation]);
 
   return weather;
-};
-
-export default useWeather;
+}

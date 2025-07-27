@@ -21,7 +21,7 @@ const getErrorMessage = (error: GeolocationPositionError): string => {
   }
 };
 
-const useGeolocation = () => {
+export default function useGeolocation() {
   const [geolocation, setGeolocation] = useState<Geolocation | null>(null);
 
   useEffect(() => {
@@ -50,6 +50,4 @@ const useGeolocation = () => {
   };
 
   return { geolocation, handleSetGeolocation };
-};
-
-export default useGeolocation;
+}

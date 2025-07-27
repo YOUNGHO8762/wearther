@@ -119,66 +119,6 @@ export function getApparelRecommendation(apparentTemp: number): string[] {
   return ['두꺼운 패딩', '목도리', '장갑', '내복', '모자', '부츠'];
 }
 
-export function getHealthRiskLevel(apparentTemp: number): {
-  level: string;
-  description: string;
-  recommendation: string;
-} {
-  if (apparentTemp >= 35) {
-    return {
-      level: '위험',
-      description: '열사병 위험',
-      recommendation: '실외활동 금지, 시원한 곳에서 휴식',
-    };
-  }
-
-  if (apparentTemp >= 32) {
-    return {
-      level: '주의',
-      description: '열탈진 위험',
-      recommendation: '무리한 실외활동 자제, 충분한 수분 섭취',
-    };
-  }
-
-  if (apparentTemp >= 28) {
-    return {
-      level: '관심',
-      description: '열피로 위험',
-      recommendation: '적절한 휴식과 수분 섭취',
-    };
-  }
-
-  if (apparentTemp <= -25) {
-    return {
-      level: '위험',
-      description: '동상 위험',
-      recommendation: '실외활동 금지, 따뜻한 곳으로 이동',
-    };
-  }
-
-  if (apparentTemp <= -15) {
-    return {
-      level: '주의',
-      description: '저체온증 위험',
-      recommendation: '보온에 주의, 실외활동 최소화',
-    };
-  }
-
-  if (apparentTemp <= -5) {
-    return {
-      level: '관심',
-      description: '추위 주의',
-      recommendation: '적절한 보온 의류 착용',
-    };
-  }
-
-  return {
-    level: '양호',
-    description: '적정 온도',
-    recommendation: '일상 활동 가능',
-  };
-}
-
 export function extractErrorMessage(
   error: unknown,
   defaultMessage: string = '오류가 발생했습니다.',

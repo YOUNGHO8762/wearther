@@ -14,7 +14,7 @@ import {
   HoverCardTrigger,
 } from '@/components/ui/hover-card';
 import useGeolocation from '@/hooks/useGeolocation';
-import { useReverseGeocoding } from '@/hooks/useReverseGeocoding';
+import useReverseGeocoding from '@/hooks/useReverseGeocoding';
 import useWeather from '@/hooks/useWeather';
 import {
   getApparelRecommendation,

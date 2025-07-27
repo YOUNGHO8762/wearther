@@ -5,7 +5,7 @@ import { extractErrorMessage } from '@/lib/utils';
 import { fetchReverseGeocode } from '@/services/geocodingAPI';
 import { Geolocation } from '@/types/geolocation';
 
-export function useReverseGeocoding(geolocation: Geolocation | null) {
+export default function useReverseGeocoding(geolocation: Geolocation | null) {
   const [address, setAddress] = useState<string | null>(null);
 
   useEffect(() => {
