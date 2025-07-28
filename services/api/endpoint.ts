@@ -18,6 +18,6 @@ export const PLACE_AUTOCOMPLETE_URL = '/place/autocomplete/json';
 
 export const GEOCODING_URL = '/geocode/json';
 
-export const WEATHER_BASE_URL = 'https://api.openweathermap.org/data/2.5';
+export const WEATHER_BASE_URL = 'https://api.openweathermap.org';
 
-export const FORECAST_URL = '/forecast';
+export const ONE_CALL_URL = 'data/3.0/onecall';

@@ -6,7 +6,7 @@ import {
   createParamsErrorResponse,
 } from '@/lib/serverUtils';
 import { isValidLatitude, isValidLongitude } from '@/lib/utils';
-import { FORECAST_URL, WEATHER_URL } from '@/services/api/endpoint';
+import { ONE_CALL_URL } from '@/services/api/endpoint';
 import { weatherApiClient } from '@/services/api/httpClient';
 import { FetchWeatherResponse } from '@/types/weather';
 
@@ -29,24 +29,21 @@ export async function GET(request: NextRequest) {
     const params = {
       lat,
       lon,
+      dt: Math.floor(Date.now() / 1000),
       appid: API_KEY,
+      exclude: 'minutely,hourly,alerts',
       units: 'metric',
       lang: 'kr',
     };
 
-    const [currentWeatherResponse, forecastResponse] = await Promise.all([
-      weatherApiClient.get<FetchWeatherResponse['current']>(WEATHER_URL, {
+    const response = await weatherApiClient.get<FetchWeatherResponse>(
+      ONE_CALL_URL,
+      {
         params,
-      }),
-      weatherApiClient.get<FetchWeatherResponse['forecast']>(FORECAST_URL, {
-        params,
-      }),
-    ]);
+      },
+    );
 
-    return NextResponse.json({
-      current: currentWeatherResponse,
-      forecast: forecastResponse,
-    });
+    return NextResponse.json(response);
   } catch (error) {
     return createCatchErrorResponse(error);
   }
