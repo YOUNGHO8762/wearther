@@ -7,7 +7,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import useInputState from '@/hooks/useInputState';
 import useSearchAddress from '@/hooks/useSearchAddress';
 import { ADDRESS_DETAILS_URL } from '@/services/api/endpoint';
 import { apiClient } from '@/services/api/httpClient';
@@ -27,8 +26,7 @@ export default function AddressSearchDialog({
   onExit,
   handleSetGeolocation,
 }: Props) {
-  const [searchTerm, handleSearchTermChange] = useInputState('');
-  const searchResults = useSearchAddress(searchTerm);
+  const { searchResults, handleSearchTermChange } = useSearchAddress();
 
   const handleAnimationEnd = () => {
     if (!isOpen) {

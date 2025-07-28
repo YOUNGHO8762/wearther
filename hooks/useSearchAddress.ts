@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
+import useInputState from '@/hooks/useInputState';
 import { extractErrorMessage } from '@/lib/utils';
 import { fetchAddressSearch } from '@/services/addressAPI';
 import { Predictions } from '@/types/address';
 
-export default function useSearchAddress(searchTerm: string) {
+export default function useSearchAddress() {
+  const [searchTerm, handleSearchTermChange] = useInputState('');
   const [searchResults, setSearchResults] = useState<Predictions[] | null>(
     null,
   );
@@ -25,5 +27,5 @@ export default function useSearchAddress(searchTerm: string) {
     })();
   }, [searchTerm]);
 
-  return searchResults;
+  return { searchResults, handleSearchTermChange };
 }
