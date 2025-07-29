@@ -26,9 +26,7 @@ export function createParamsErrorResponse(
   return createErrorResponse(message, 400);
 }
 
-export function createAPIKeyErrorResponse(
-  serviceName: string = 'API',
-): NextResponse {
+export function createAPIKeyErrorResponse(serviceName = 'API'): NextResponse {
   return createErrorResponse(`${serviceName} 키가 설정되지 않았습니다.`, 401);
 }
 

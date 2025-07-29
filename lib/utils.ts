@@ -121,7 +121,7 @@ export function getApparelRecommendation(apparentTemp: number): string[] {
 
 export function extractErrorMessage(
   error: unknown,
-  defaultMessage: string = '오류가 발생했습니다.',
+  defaultMessage = '오류가 발생했습니다.',
 ): string {
   if (isAxiosError(error)) {
     return error.response?.data.error || defaultMessage;

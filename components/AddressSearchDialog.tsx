@@ -8,6 +8,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import useSearchAddress from '@/hooks/useSearchAddress';
+import { extractErrorMessage } from '@/lib/utils';
 import { ADDRESS_DETAILS_URL } from '@/services/api/endpoint';
 import { apiClient } from '@/services/api/httpClient';
 import { FetchAddressDetailsResponse } from '@/types/address';
@@ -35,15 +36,19 @@ export default function AddressSearchDialog({
   };
 
   const handleAddressSelect = async (placeId: string) => {
-    const response = await apiClient.get<FetchAddressDetailsResponse>(
-      `${ADDRESS_DETAILS_URL}?placeID=${placeId}`,
-    );
-    const geolocation = {
-      latitude: response.result.geometry.location.lat,
-      longitude: response.result.geometry.location.lng,
-    };
-    handleSetGeolocation(geolocation);
-    close();
+    try {
+      const response = await apiClient.get<FetchAddressDetailsResponse>(
+        `${ADDRESS_DETAILS_URL}?placeID=${placeId}`,
+      );
+      const geolocation = {
+        latitude: response.result.geometry.location.lat,
+        longitude: response.result.geometry.location.lng,
+      };
+      handleSetGeolocation(geolocation);
+      close();
+    } catch (error) {
+      extractErrorMessage(error);
+    }
   };
 
   return (
