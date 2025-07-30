@@ -2,6 +2,8 @@ import { isAxiosError } from 'axios';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
+import { ClientError } from '@/types/httpClient';
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -124,19 +126,7 @@ export function extractErrorMessage(
   defaultMessage = '오류가 발생했습니다.',
 ): string {
   if (isAxiosError(error)) {
-    return error.response?.data.error || defaultMessage;
-  }
-
-  if (error instanceof Error) {
-    return error.message || defaultMessage;
-  }
-
-  if (error && typeof error === 'object' && 'message' in error) {
-    return typeof error.message === 'string' ? error.message : defaultMessage;
-  }
-
-  if (typeof error === 'string') {
-    return error;
+    return (error as ClientError).response.data.error ?? defaultMessage;
   }
 
   return defaultMessage;

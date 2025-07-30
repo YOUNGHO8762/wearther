@@ -7,7 +7,7 @@ import {
 } from '@/lib/serverUtils';
 import { isValidLatitude, isValidLongitude } from '@/lib/utils';
 import { GEOCODING_URL } from '@/services/api/endpoint';
-import { mapApiClient } from '@/services/api/httpClient';
+import { mapHttpClient } from '@/services/api/httpClient';
 import { FetchReverseGeocodeResponse } from '@/types/geolocation';
 
 const API_KEY = process.env.MAP_API_KEY;
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
       return createAPIKeyErrorResponse('Map API');
     }
 
-    const response = await mapApiClient.get<FetchReverseGeocodeResponse>(
+    const response = await mapHttpClient.get<FetchReverseGeocodeResponse>(
       GEOCODING_URL,
       {
         params: {

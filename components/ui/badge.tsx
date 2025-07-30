@@ -28,7 +28,7 @@ const badgeVariants = cva(
 function Badge({
   className,
   variant,
-  asChild = false,
+  asChild,
   ...props
 }: React.ComponentProps<'span'> &
   VariantProps<typeof badgeVariants> & { asChild?: boolean }) {
@@ -42,5 +42,9 @@ function Badge({
     />
   );
 }
+
+Badge.defaultProps = {
+  asChild: false,
+};
 
 export { Badge, badgeVariants };

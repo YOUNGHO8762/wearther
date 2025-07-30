@@ -10,7 +10,7 @@ import {
 import useSearchAddress from '@/hooks/useSearchAddress';
 import { extractErrorMessage } from '@/lib/utils';
 import { ADDRESS_DETAILS_URL } from '@/services/api/endpoint';
-import { apiClient } from '@/services/api/httpClient';
+import { httpClient } from '@/services/api/httpClient';
 import { FetchAddressDetailsResponse } from '@/types/address';
 import { Geolocation } from '@/types/geolocation';
 
@@ -37,7 +37,7 @@ export default function AddressSearchDialog({
 
   const handleAddressSelect = async (placeId: string) => {
     try {
-      const response = await apiClient.get<FetchAddressDetailsResponse>(
+      const response = await httpClient.get<FetchAddressDetailsResponse>(
         `${ADDRESS_DETAILS_URL}?placeID=${placeId}`,
       );
       const geolocation = {
@@ -67,16 +67,14 @@ export default function AddressSearchDialog({
           {!!searchResults?.length && (
             <div className="max-h-60 space-y-1 overflow-y-auto">
               {searchResults.map((address) => (
-                <div
+                <button
+                  type="button"
                   key={address.place_id}
-                  tabIndex={0}
-                  role="button"
-                  aria-label={`주소 선택: ${address.description}`}
-                  className="hover:bg-muted focus:bg-muted cursor-pointer rounded-md p-3 transition-colors focus:outline-none"
+                  className="hover:bg-muted focus:bg-muted w-full cursor-pointer rounded-md p-3 text-start text-sm transition-colors focus:outline-none"
                   onClick={() => handleAddressSelect(address.place_id)}
                 >
-                  <p className="text-sm font-medium">{address.description}</p>
-                </div>
+                  {address.description}
+                </button>
               ))}
             </div>
           )}

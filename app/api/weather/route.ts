@@ -7,7 +7,7 @@ import {
 } from '@/lib/serverUtils';
 import { isValidLatitude, isValidLongitude } from '@/lib/utils';
 import { ONE_CALL_URL } from '@/services/api/endpoint';
-import { weatherApiClient } from '@/services/api/httpClient';
+import { weatherHttpClient } from '@/services/api/httpClient';
 import { FetchWeatherResponse } from '@/types/weather';
 
 const API_KEY = process.env.WEATHER_API_KEY;
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
       lang: 'kr',
     };
 
-    const response = await weatherApiClient.get<FetchWeatherResponse>(
+    const response = await weatherHttpClient.get<FetchWeatherResponse>(
       ONE_CALL_URL,
       {
         params,

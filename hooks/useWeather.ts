@@ -17,7 +17,6 @@ export default function useWeather(geolocation: Geolocation | null) {
     (async () => {
       try {
         const response = await fetchWeather(geolocation);
-
         setWeather(response);
       } catch (error) {
         toast.error(extractErrorMessage(error));

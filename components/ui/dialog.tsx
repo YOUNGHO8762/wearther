@@ -49,7 +49,7 @@ function DialogOverlay({
 function DialogContent({
   className,
   children,
-  showCloseButton = true,
+  showCloseButton,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
   showCloseButton?: boolean;
@@ -79,6 +79,10 @@ function DialogContent({
     </DialogPortal>
   );
 }
+
+DialogContent.defaultProps = {
+  showCloseButton: true,
+};
 
 function DialogHeader({ className, ...props }: React.ComponentProps<'div'>) {
   return (

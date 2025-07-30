@@ -6,7 +6,7 @@ import {
   createParamsErrorResponse,
 } from '@/lib/serverUtils';
 import { PLACE_DETAIL_URL } from '@/services/api/endpoint';
-import { mapApiClient } from '@/services/api/httpClient';
+import { mapHttpClient } from '@/services/api/httpClient';
 import { FetchAddressDetailsResponse } from '@/types/address';
 
 const API_KEY = process.env.MAP_API_KEY;
@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
       fields: 'geometry',
     };
 
-    const response = await mapApiClient.get<FetchAddressDetailsResponse>(
+    const response = await mapHttpClient.get<FetchAddressDetailsResponse>(
       PLACE_DETAIL_URL,
       { params },
     );

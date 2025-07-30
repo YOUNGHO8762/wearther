@@ -19,14 +19,14 @@ class HttpClient {
   }
 }
 
-export const apiClient = new HttpClient({
+export const httpClient = new HttpClient({
   baseURL: BASE_URL,
 });
 
-export const mapApiClient = new HttpClient({
+export const mapHttpClient = new HttpClient({
   baseURL: MAP_BASE_URL,
 });
 
-export const weatherApiClient = new HttpClient({
+export const weatherHttpClient = new HttpClient({
   baseURL: WEATHER_BASE_URL,
 });

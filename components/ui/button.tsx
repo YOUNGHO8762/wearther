@@ -39,7 +39,7 @@ function Button({
   className,
   variant,
   size,
-  asChild = false,
+  asChild,
   ...props
 }: React.ComponentProps<'button'> &
   VariantProps<typeof buttonVariants> & {
@@ -55,5 +55,9 @@ function Button({
     />
   );
 }
+
+Button.defaultProps = {
+  asChild: false,
+};
 
 export { Button, buttonVariants };

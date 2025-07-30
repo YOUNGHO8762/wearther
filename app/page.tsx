@@ -26,6 +26,17 @@ export default function Home() {
     return null;
   }
 
+  const handleOpenAddressSearch = () => {
+    overlay.open(({ isOpen, close, unmount }) => (
+      <AddressSearchDialog
+        isOpen={isOpen}
+        close={close}
+        onExit={unmount}
+        handleSetGeolocation={handleSetGeolocation}
+      />
+    ));
+  };
+
   const currentWeather = weather.current;
   const todayForecast = weather.daily[0];
 
@@ -82,16 +93,7 @@ export default function Home() {
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => {
-                overlay.open(({ isOpen, close, unmount }) => (
-                  <AddressSearchDialog
-                    isOpen={isOpen}
-                    close={close}
-                    onExit={unmount}
-                    handleSetGeolocation={handleSetGeolocation}
-                  />
-                ));
-              }}
+              onClick={handleOpenAddressSearch}
               aria-label="위치 변경"
             >
               <Search className="h-3.5 w-3.5" />

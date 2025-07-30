@@ -1,7 +1,8 @@
 import { isAxiosError } from 'axios';
 import { NextResponse } from 'next/server';
 
-import { extractErrorMessage } from './utils';
+import { extractErrorMessage } from '@/lib/utils';
+import { ServerError } from '@/types/httpClient';
 
 const DEFAULT_SERVER_ERROR_MESSAGE = '서버 내부 오류가 발생했습니다.';
 
@@ -38,11 +39,12 @@ export function createServerErrorResponse(
 
 export function createCatchErrorResponse(error: unknown) {
   if (isAxiosError(error)) {
+    const axiosError = error as ServerError;
     return createErrorResponse(
-      error.response?.data.error_message ??
-        error.response?.data.message ??
+      axiosError.response.data.error_message ??
+        axiosError.response.data.message ??
         DEFAULT_SERVER_ERROR_MESSAGE,
-      error.response?.status ?? 500,
+      axiosError.response.status ?? 500,
     );
   }
 

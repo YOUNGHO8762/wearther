@@ -2,14 +2,14 @@ import {
   ADDRESS_DETAILS_URL,
   SEARCH_ADDRESS_URL,
 } from '@/services/api/endpoint';
-import { apiClient } from '@/services/api/httpClient';
+import { httpClient } from '@/services/api/httpClient';
 import {
   FetchAddressDetailsResponse,
   FetchAddressSearchResponse,
 } from '@/types/address';
 
 export const fetchAddressSearch = async (input: string) => {
-  const response = await apiClient.get<FetchAddressSearchResponse>(
+  const response = await httpClient.get<FetchAddressSearchResponse>(
     SEARCH_ADDRESS_URL,
     {
       params: {
@@ -21,7 +21,7 @@ export const fetchAddressSearch = async (input: string) => {
 };
 
 export const fetchAddressDetails = async (placeID: string) => {
-  const response = await apiClient.get<FetchAddressDetailsResponse>(
+  const response = await httpClient.get<FetchAddressDetailsResponse>(
     ADDRESS_DETAILS_URL,
     {
       params: {
