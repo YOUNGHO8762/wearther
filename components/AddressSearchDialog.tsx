@@ -27,7 +27,7 @@ export default function AddressSearchDialog({
   onExit,
   handleSetGeolocation,
 }: Props) {
-  const { searchResults, handleSearchTermChange } = useSearchAddress();
+  const { searchResults, handleAddressSearch } = useSearchAddress();
 
   const handleAnimationEnd = () => {
     if (!isOpen) {
@@ -40,11 +40,11 @@ export default function AddressSearchDialog({
       const response = await httpClient.get<FetchAddressDetailsResponse>(
         `${ADDRESS_DETAILS_URL}?placeID=${placeId}`,
       );
-      const geolocation = {
+
+      handleSetGeolocation({
         latitude: response.result.geometry.location.lat,
         longitude: response.result.geometry.location.lng,
-      };
-      handleSetGeolocation(geolocation);
+      });
       close();
     } catch (error) {
       extractErrorMessage(error);
@@ -58,7 +58,7 @@ export default function AddressSearchDialog({
           <DialogTitle>주소 검색</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
-          <AddressSearchForm handleSearchTermChange={handleSearchTermChange} />
+          <AddressSearchForm handleAddressSearch={handleAddressSearch} />
           {searchResults && !searchResults?.length && (
             <div className="text-muted-foreground py-4 text-center">
               검색 결과가 없습니다.

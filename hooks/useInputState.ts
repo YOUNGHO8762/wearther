@@ -9,9 +9,8 @@ export default function useInputState(
   const [value, setValue] = useState(initialValue);
 
   const handleValueChange = useCallback(
-    (input: ChangeEvent<HTMLInputElement> | string) => {
-      const newValue = typeof input === 'string' ? input : input.target.value;
-      setValue(transformValue(newValue));
+    ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+      setValue(transformValue(value));
     },
     [transformValue],
   );
