@@ -71,43 +71,49 @@ export default function Home() {
               height={64}
               className="mb-2"
             />
-            <div className="text-3xl font-bold">
+            <p className="text-3xl font-bold" aria-label="현재 온도">
               {Math.round(weather.current.temp)}°C
-            </div>
-            <div className="text-center text-sm text-gray-500">
+            </p>
+            <p
+              className="text-center text-sm text-gray-500"
+              aria-label="오늘의 최저 최고 온도"
+            >
               (최저 {Math.round(todayForecast.temp.min)}° / 최고{' '}
               {Math.round(todayForecast.temp.max)}°)
-            </div>
-            <div className="text-sm text-gray-700">
+            </p>
+            <p className="text-sm text-gray-700">
               체감온도 : {Math.round(weather.current.feels_like)}°C
-            </div>
+            </p>
           </div>
           <div className="space-y-1">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1">
+            <div
+              className="flex items-center justify-between"
+              aria-label="위치"
+            >
+              <p className="flex items-center gap-1">
                 <MapPin className="h-4 w-4 text-gray-500" />
                 <span className="text-sm text-gray-600">{address}</span>
-              </div>
+              </p>
             </div>
             <Button
               type="button"
               variant="outline"
               size="sm"
               onClick={handleOpenAddressSearch}
-              aria-label="위치 변경"
+              aria-haspopup="dialog"
             >
               <Search className="h-3.5 w-3.5" />
               위치 변경
             </Button>
             <p className="text-sm">습도 : {currentWeather.humidity}%</p>
             <p className="text-sm">풍속 : {currentWeather.wind_speed} m/s</p>
-            <div className="flex flex-wrap gap-1">
+            <ul className="flex flex-wrap gap-1" aria-label="옷차림 추천">
               {apparelRecommendation.map((item) => (
-                <Badge key={item} variant="secondary">
-                  {item}
+                <Badge key={item} variant="secondary" asChild>
+                  <li>{item}</li>
                 </Badge>
               ))}
-            </div>
+            </ul>
           </div>
         </CardContent>
       </Card>

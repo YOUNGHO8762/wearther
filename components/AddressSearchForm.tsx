@@ -24,10 +24,11 @@ export default function AddressSearchForm({ handleAddressSearch }: Props) {
   return (
     <form onSubmit={handleSubmit} className="flex items-center gap-2">
       <Input
-        placeholder="주소를 입력하세요."
+        placeholder="주소를 입력하세요"
         value={searchTerm}
         onChange={setSearchTerm}
-        autoFocus
+        aria-label="주소"
+        required
       />
       <Button type="submit" disabled={disabled}>
         검색

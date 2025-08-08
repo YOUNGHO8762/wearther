@@ -53,30 +53,35 @@ export default function AddressSearchDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && close()}>
-      <DialogContent className="max-w-md" onAnimationEnd={handleAnimationEnd}>
+      <DialogContent
+        className="max-w-md"
+        onAnimationEnd={handleAnimationEnd}
+        showCloseButton
+      >
         <DialogHeader>
           <DialogTitle>주소 검색</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <AddressSearchForm handleAddressSearch={handleAddressSearch} />
           {searchResults && !searchResults?.length && (
-            <div className="text-muted-foreground py-4 text-center">
+            <p className="text-muted-foreground py-4 text-center">
               검색 결과가 없습니다.
-            </div>
+            </p>
           )}
           {!!searchResults?.length && (
-            <div className="max-h-60 space-y-1 overflow-y-auto">
+            <ul className="max-h-60 space-y-1 overflow-y-auto">
               {searchResults.map((address) => (
-                <button
-                  type="button"
-                  key={address.place_id}
-                  className="hover:bg-muted focus:bg-muted w-full cursor-pointer rounded-md p-3 text-start text-sm transition-colors focus:outline-none"
-                  onClick={() => handleAddressSelect(address.place_id)}
-                >
-                  {address.description}
-                </button>
+                <li key={address.place_id}>
+                  <button
+                    type="button"
+                    className="hover:bg-muted focus:bg-muted w-full cursor-pointer rounded-md p-3 text-start text-sm transition-colors focus:outline-none"
+                    onClick={() => handleAddressSelect(address.place_id)}
+                  >
+                    {address.description}
+                  </button>
+                </li>
               ))}
-            </div>
+            </ul>
           )}
         </div>
       </DialogContent>
