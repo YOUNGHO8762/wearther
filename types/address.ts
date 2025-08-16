@@ -3,12 +3,12 @@ export interface Predictions {
   place_id: string;
 }
 
-export interface FetchAddressSearchResponse {
+export interface FetchAddressResponse {
   predictions: Predictions[];
   status: string;
 }
 
-export interface FetchAddressDetailsResponse {
+export interface FetchLocationByPlaceIDResponse {
   result: {
     geometry: {
       location: {

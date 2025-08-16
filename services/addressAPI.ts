@@ -4,12 +4,12 @@ import {
 } from '@/services/api/endpoint';
 import { httpClient } from '@/services/api/httpClient';
 import {
-  FetchAddressDetailsResponse,
-  FetchAddressSearchResponse,
+  FetchLocationByPlaceIDResponse,
+  FetchAddressResponse,
 } from '@/types/address';
 
-export const fetchAddressSearch = async (input: string) => {
-  const response = await httpClient.get<FetchAddressSearchResponse>(
+export const fetchAddresses = async (input: string) => {
+  const response = await httpClient.get<FetchAddressResponse>(
     SEARCH_ADDRESS_URL,
     {
       params: {
@@ -20,8 +20,8 @@ export const fetchAddressSearch = async (input: string) => {
   return response.predictions;
 };
 
-export const fetchAddressDetails = async (placeID: string) => {
-  const response = await httpClient.get<FetchAddressDetailsResponse>(
+export const fetchLocationByPlaceID = async (placeID: string) => {
+  const response = await httpClient.get<FetchLocationByPlaceIDResponse>(
     ADDRESS_DETAILS_URL,
     {
       params: {
@@ -30,5 +30,5 @@ export const fetchAddressDetails = async (placeID: string) => {
     },
   );
 
-  return response;
+  return response.result.geometry.location;
 };

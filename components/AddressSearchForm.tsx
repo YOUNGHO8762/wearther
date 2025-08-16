@@ -1,24 +1,26 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useDebounce } from '@/hooks/useDebounce';
 import useInputState from '@/hooks/useInputState';
-import usePrevious from '@/hooks/usePrevious';
 
 interface Props {
-  handleAddressSearch: (input: string) => void;
+  searchAddress: (searchTerm: string) => void;
 }
 
-export default function AddressSearchForm({ handleAddressSearch }: Props) {
+export default function AddressSearchForm({ searchAddress }: Props) {
   const [searchTerm, setSearchTerm] = useInputState();
-  const previousSearchTerm = usePrevious(searchTerm);
-  const disabled = !searchTerm.trim() || previousSearchTerm === searchTerm;
+  const debouncedSearchAddress = useDebounce(searchAddress, 300);
+
+  const disabled = !searchTerm.trim();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (disabled) {
       return;
     }
 
-    handleAddressSearch(searchTerm);
+    debouncedSearchAddress(searchTerm);
   };
 
   return (

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { toast } from 'sonner';
 
 import type { Geolocation } from '@/types/geolocation';
@@ -30,24 +30,24 @@ export default function useGeolocation() {
       return;
     }
 
-    const handleSuccess = (position: GeolocationPosition) => {
+    const successCallback = (position: GeolocationPosition) => {
       setGeolocation({
         latitude: position.coords.latitude,
         longitude: position.coords.longitude,
       });
     };
 
-    const handleError = (error: GeolocationPositionError) => {
+    const errorCallback = (error: GeolocationPositionError) => {
       toast.error(getErrorMessage(error));
       setGeolocation(DEFAULT_LOCATION);
     };
 
-    navigator.geolocation.getCurrentPosition(handleSuccess, handleError);
+    navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
   }, []);
 
-  const handleSetGeolocation = (geolocation: Geolocation) => {
+  const updateGeolocation = useCallback((geolocation: Geolocation) => {
     setGeolocation(geolocation);
-  };
+  }, []);
 
-  return { geolocation, handleSetGeolocation };
+  return { geolocation, updateGeolocation };
 }

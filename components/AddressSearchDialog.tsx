@@ -9,25 +9,23 @@ import {
 } from '@/components/ui/dialog';
 import useSearchAddress from '@/hooks/useSearchAddress';
 import { extractErrorMessage } from '@/lib/utils';
-import { ADDRESS_DETAILS_URL } from '@/services/api/endpoint';
-import { httpClient } from '@/services/api/httpClient';
-import { FetchAddressDetailsResponse } from '@/types/address';
+import { fetchLocationByPlaceID } from '@/services/addressAPI';
 import { Geolocation } from '@/types/geolocation';
 
 interface Props {
   isOpen: boolean;
   close: () => void;
   onExit: () => void;
-  handleSetGeolocation: (geolocation: Geolocation) => void;
+  updateGeolocation: (geolocation: Geolocation) => void;
 }
 
 export default function AddressSearchDialog({
   isOpen,
   close,
   onExit,
-  handleSetGeolocation,
+  updateGeolocation,
 }: Props) {
-  const { searchResults, handleAddressSearch } = useSearchAddress();
+  const { addresses, searchAddress } = useSearchAddress();
 
   const handleAnimationEnd = () => {
     if (!isOpen) {
@@ -35,16 +33,15 @@ export default function AddressSearchDialog({
     }
   };
 
-  const handleAddressSelect = async (placeId: string) => {
+  const handleAddressClick = async (placeID: string) => {
     try {
-      const response = await httpClient.get<FetchAddressDetailsResponse>(
-        `${ADDRESS_DETAILS_URL}?placeID=${placeId}`,
-      );
+      const { lat, lng } = await fetchLocationByPlaceID(placeID);
 
-      handleSetGeolocation({
-        latitude: response.result.geometry.location.lat,
-        longitude: response.result.geometry.location.lng,
+      updateGeolocation({
+        latitude: lat,
+        longitude: lng,
       });
+
       close();
     } catch (error) {
       extractErrorMessage(error);
@@ -62,20 +59,20 @@ export default function AddressSearchDialog({
           <DialogTitle>주소 검색</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
-          <AddressSearchForm handleAddressSearch={handleAddressSearch} />
-          {searchResults && !searchResults?.length && (
+          <AddressSearchForm searchAddress={searchAddress} />
+          {addresses && !addresses?.length && (
             <p className="text-muted-foreground py-4 text-center">
               검색 결과가 없습니다.
             </p>
           )}
-          {!!searchResults?.length && (
+          {!!addresses?.length && (
             <ul className="max-h-60 space-y-1 overflow-y-auto">
-              {searchResults.map((address) => (
+              {addresses.map((address) => (
                 <li key={address.place_id}>
                   <button
                     type="button"
                     className="hover:bg-muted focus:bg-muted w-full cursor-pointer rounded-md p-3 text-start text-sm transition-colors focus:outline-none"
-                    onClick={() => handleAddressSelect(address.place_id)}
+                    onClick={() => handleAddressClick(address.place_id)}
                   >
                     {address.description}
                   </button>

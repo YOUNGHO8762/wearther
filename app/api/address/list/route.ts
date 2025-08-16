@@ -7,7 +7,7 @@ import {
 } from '@/lib/serverUtils';
 import { PLACE_AUTOCOMPLETE_URL } from '@/services/api/endpoint';
 import { mapHttpClient } from '@/services/api/httpClient';
-import { FetchAddressSearchResponse } from '@/types/address';
+import { FetchAddressResponse } from '@/types/address';
 
 const API_KEY = process.env.MAP_API_KEY;
 
@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
       types: 'geocode',
     };
 
-    const response = await mapHttpClient.get<FetchAddressSearchResponse>(
+    const response = await mapHttpClient.get<FetchAddressResponse>(
       PLACE_AUTOCOMPLETE_URL,
       { params },
     );

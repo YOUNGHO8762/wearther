@@ -18,7 +18,7 @@ import {
 } from '@/lib/utils';
 
 export default function Home() {
-  const { geolocation, handleSetGeolocation } = useGeolocation();
+  const { geolocation, updateGeolocation } = useGeolocation();
   const weather = useWeather(geolocation);
   const address = useReverseGeocoding(geolocation);
 
@@ -26,13 +26,13 @@ export default function Home() {
     return null;
   }
 
-  const handleOpenAddressSearch = () => {
+  const handleOpenAddressClick = () => {
     overlay.open(({ isOpen, close, unmount }) => (
       <AddressSearchDialog
         isOpen={isOpen}
         close={close}
         onExit={unmount}
-        handleSetGeolocation={handleSetGeolocation}
+        updateGeolocation={updateGeolocation}
       />
     ));
   };
@@ -99,7 +99,7 @@ export default function Home() {
               type="button"
               variant="outline"
               size="sm"
-              onClick={handleOpenAddressSearch}
+              onClick={handleOpenAddressClick}
               aria-haspopup="dialog"
             >
               <Search className="h-3.5 w-3.5" />
