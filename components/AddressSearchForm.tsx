@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default function AddressSearchForm({ searchAddress }: Props) {
-  const [searchTerm, setSearchTerm] = useInputState();
+  const [searchTerm, handleSearchTermChange] = useInputState();
   const debouncedSearchAddress = useDebounce(searchAddress, 300);
 
   const disabled = !searchTerm.trim();
@@ -28,7 +28,7 @@ export default function AddressSearchForm({ searchAddress }: Props) {
       <Input
         placeholder="주소를 입력하세요"
         value={searchTerm}
-        onChange={setSearchTerm}
+        onChange={handleSearchTermChange}
         aria-label="주소"
         required
       />
