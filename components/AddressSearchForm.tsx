@@ -1,26 +1,35 @@
+import { useRef } from 'react';
+import { toast } from 'sonner';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useDebounce } from '@/hooks/useDebounce';
 import useInputState from '@/hooks/useInputState';
+import { extractErrorMessage } from '@/lib/utils';
 
 interface Props {
-  searchAddress: (searchTerm: string) => void;
+  searchAddress: (searchTerm: string) => Promise<void>;
 }
 
 export default function AddressSearchForm({ searchAddress }: Props) {
   const [searchTerm, handleSearchTermChange] = useInputState();
-  const debouncedSearchAddress = useDebounce(searchAddress, 300);
+  const lastSearchTermRef = useRef<string>('');
 
-  const disabled = !searchTerm.trim();
+  const disabled =
+    !searchTerm.trim() || searchTerm === lastSearchTermRef.current;
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (disabled) {
       return;
     }
 
-    debouncedSearchAddress(searchTerm);
+    try {
+      await searchAddress(searchTerm);
+      lastSearchTermRef.current = searchTerm;
+    } catch (error) {
+      toast.error(extractErrorMessage(error));
+    }
   };
 
   return (
