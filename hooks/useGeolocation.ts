@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 
 import type { Geolocation } from '@/types/geolocation';
@@ -45,9 +45,9 @@ export default function useGeolocation() {
     navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
   }, []);
 
-  const updateGeolocation = useCallback((geolocation: Geolocation) => {
+  const updateGeolocation = (geolocation: Geolocation) => {
     setGeolocation(geolocation);
-  }, []);
+  };
 
   return { geolocation, updateGeolocation };
 }

@@ -11,20 +11,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import useGeolocation from '@/hooks/useGeolocation';
 import useReverseGeocoding from '@/hooks/useReverseGeocoding';
 import useWeather from '@/hooks/useWeather';
-import {
-  getApparelRecommendation,
-  getApparentTemperature,
-  getTemperatureForClothing,
-} from '@/lib/utils';
+import { getClothingRecommendations, getRoundNumber } from '@/lib/utils';
 
 export default function Home() {
   const { geolocation, updateGeolocation } = useGeolocation();
   const weather = useWeather(geolocation);
   const address = useReverseGeocoding(geolocation);
-
-  if (!weather || !address) {
-    return null;
-  }
 
   const handleOpenAddressClick = () => {
     overlay.open(({ isOpen, close, unmount }) => (
@@ -37,19 +29,20 @@ export default function Home() {
     ));
   };
 
-  const currentWeather = weather.current;
-  const todayForecast = weather.daily[0];
+  const current = weather?.current;
+  const currentWeather = current?.weather[0];
+  const todayForecast = weather?.daily[0];
 
-  const tempForClothing = getTemperatureForClothing(
-    todayForecast.temp.min,
-    todayForecast.temp.max,
-  );
-  const apparentTemp = getApparentTemperature(
-    tempForClothing,
-    currentWeather.humidity,
-    currentWeather.wind_speed,
-  );
-  const apparelRecommendation = getApparelRecommendation(apparentTemp);
+  const weatherData = current &&
+    todayForecast && {
+      maxTemp: todayForecast.temp.max,
+      minTemp: todayForecast.temp.min,
+      humidity: current.humidity,
+      windSpeed: current.wind_speed,
+    };
+
+  const clothingRecommendations =
+    weatherData && getClothingRecommendations(weatherData);
 
   return (
     <div className="flex min-h-dvh items-center justify-center bg-gradient-to-br from-blue-100 to-blue-300">
@@ -57,32 +50,37 @@ export default function Home() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <span>현재 날씨</span>
-            <Badge variant="outline" className="px-2 py-1 text-base">
-              {currentWeather.weather[0].description}
-            </Badge>
+            {currentWeather?.description && (
+              <Badge variant="outline" className="px-2 py-1 text-base">
+                {currentWeather.description}
+              </Badge>
+            )}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="mb-4 flex flex-col items-center gap-2">
-            <Image
-              src={`https://openweathermap.org/img/wn/${currentWeather.weather[0].icon}.png`}
-              alt="weather icon"
-              width={64}
-              height={64}
-              className="mb-2"
-            />
+            <div className="mb-2 size-16">
+              {currentWeather?.icon && (
+                <Image
+                  src={`https://openweathermap.org/img/wn/${currentWeather.icon}.png`}
+                  alt=""
+                  width={64}
+                  height={64}
+                />
+              )}
+            </div>
             <p className="text-3xl font-bold" aria-label="현재 온도">
-              {Math.round(weather.current.temp)}°C
+              {getRoundNumber(weather?.current.temp)}°C
             </p>
             <p
               className="text-center text-sm text-gray-500"
               aria-label="오늘의 최저 최고 온도"
             >
-              (최저 {Math.round(todayForecast.temp.min)}° / 최고{' '}
-              {Math.round(todayForecast.temp.max)}°)
+              (최저 {getRoundNumber(todayForecast?.temp.min)}° / 최고{' '}
+              {getRoundNumber(todayForecast?.temp.max)}°)
             </p>
             <p className="text-sm text-gray-700">
-              체감온도 : {Math.round(weather.current.feels_like)}°C
+              체감온도 : {getRoundNumber(weather?.current.feels_like)}°C
             </p>
           </div>
           <div className="space-y-1">
@@ -105,10 +103,10 @@ export default function Home() {
               <Search className="h-3.5 w-3.5" />
               위치 변경
             </Button>
-            <p className="text-sm">습도 : {currentWeather.humidity}%</p>
-            <p className="text-sm">풍속 : {currentWeather.wind_speed} m/s</p>
+            <p className="text-sm">습도 : {current?.humidity}%</p>
+            <p className="text-sm">풍속 : {current?.wind_speed} m/s</p>
             <ul className="flex flex-wrap gap-1" aria-label="옷차림 추천">
-              {apparelRecommendation.map((item) => (
+              {clothingRecommendations?.map((item) => (
                 <Badge key={item} variant="secondary" asChild>
                   <li>{item}</li>
                 </Badge>
