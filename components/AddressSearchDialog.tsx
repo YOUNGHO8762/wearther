@@ -14,17 +14,11 @@ import { Geolocation } from '@/types/geolocation';
 
 interface Props {
   isOpen: boolean;
-  close: () => void;
+  close: (geolocation?: Geolocation) => void;
   onExit: () => void;
-  updateGeolocation: (geolocation: Geolocation) => void;
 }
 
-export default function AddressSearchDialog({
-  isOpen,
-  close,
-  onExit,
-  updateGeolocation,
-}: Props) {
+export default function AddressSearchDialog({ isOpen, close, onExit }: Props) {
   const { addresses, searchAddress } = useSearchAddress();
 
   const handleAnimationEnd = () => {
@@ -37,12 +31,10 @@ export default function AddressSearchDialog({
     try {
       const { lat, lng } = await fetchLocationByPlaceID(placeID);
 
-      updateGeolocation({
+      close({
         latitude: lat,
         longitude: lng,
       });
-
-      close();
     } catch (error) {
       extractErrorMessage(error);
     }

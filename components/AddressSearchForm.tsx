@@ -1,10 +1,8 @@
 import { useRef } from 'react';
-import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import useInputState from '@/hooks/useInputState';
-import { extractErrorMessage } from '@/lib/utils';
 
 interface Props {
   searchAddress: (searchTerm: string) => Promise<void>;
@@ -24,12 +22,8 @@ export default function AddressSearchForm({ searchAddress }: Props) {
       return;
     }
 
-    try {
-      await searchAddress(searchTerm);
-      lastSearchTermRef.current = searchTerm;
-    } catch (error) {
-      toast.error(extractErrorMessage(error));
-    }
+    await searchAddress(searchTerm);
+    lastSearchTermRef.current = searchTerm;
   };
 
   return (

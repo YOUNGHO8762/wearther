@@ -12,21 +12,27 @@ import useGeolocation from '@/hooks/useGeolocation';
 import useReverseGeocoding from '@/hooks/useReverseGeocoding';
 import useWeather from '@/hooks/useWeather';
 import { getClothingRecommendations, getRoundNumber } from '@/lib/utils';
+import { Geolocation } from '@/types/geolocation';
 
 export default function Home() {
   const { geolocation, updateGeolocation } = useGeolocation();
   const weather = useWeather(geolocation);
   const address = useReverseGeocoding(geolocation);
 
-  const handleOpenAddressClick = () => {
-    overlay.open(({ isOpen, close, unmount }) => (
+  const handleAddressSearchClick = async () => {
+    const selectedGeolocation = await overlay.openAsync<
+      Geolocation | undefined
+    >(({ isOpen, close, unmount }) => (
       <AddressSearchDialog
         isOpen={isOpen}
-        close={close}
+        close={(geolocation?: Geolocation) => close(geolocation)}
         onExit={unmount}
-        updateGeolocation={updateGeolocation}
       />
     ));
+
+    if (selectedGeolocation) {
+      updateGeolocation(selectedGeolocation);
+    }
   };
 
   const current = weather?.current;
@@ -97,7 +103,7 @@ export default function Home() {
               type="button"
               variant="outline"
               size="sm"
-              onClick={handleOpenAddressClick}
+              onClick={handleAddressSearchClick}
               aria-haspopup="dialog"
             >
               <Search className="h-3.5 w-3.5" />
