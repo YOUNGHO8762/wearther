@@ -5,24 +5,26 @@ import { Input } from '@/components/ui/input';
 import useInputState from '@/hooks/useInputState';
 
 interface Props {
-  searchAddress: (searchTerm: string) => Promise<void>;
+  onSubmittedSearchTermChange: (searchTerm: string) => void;
 }
 
-export default function AddressSearchForm({ searchAddress }: Props) {
+export default function AddressSearchForm({
+  onSubmittedSearchTermChange,
+}: Props) {
   const [searchTerm, handleSearchTermChange] = useInputState();
   const lastSearchTermRef = useRef<string>('');
 
   const disabled =
     !searchTerm.trim() || searchTerm === lastSearchTermRef.current;
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (disabled) {
       return;
     }
 
-    await searchAddress(searchTerm);
+    onSubmittedSearchTermChange(searchTerm);
     lastSearchTermRef.current = searchTerm;
   };
 

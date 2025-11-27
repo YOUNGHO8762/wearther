@@ -1,53 +1,86 @@
-import { useState, useEffect } from 'react';
-import { toast } from 'sonner';
+import { useState, useEffect, useCallback } from 'react';
 
 import type { Geolocation } from '@/types/geolocation';
 
-const DEFAULT_LOCATION: Geolocation = {
-  latitude: 37.552987017,
-  longitude: 126.972591728,
-};
+class CustomGeoLocationError extends Error {
+  code: number;
 
-const getErrorMessage = (error: GeolocationPositionError): string => {
-  switch (error.code) {
-    case error.PERMISSION_DENIED:
-      return '위치 정보 접근이 거부되었습니다.';
-    case error.POSITION_UNAVAILABLE:
-      return '위치 정보를 사용할 수 없습니다.';
-    case error.TIMEOUT:
-      return '위치 정보 요청 시간이 초과되었습니다.';
-    default:
-      return '위치 정보를 가져오는 데 실패했습니다.';
+  constructor({ code, message }: { message: string; code: number }) {
+    super(message);
+    this.name = 'CustomGeoLocationError';
+    this.code = code;
   }
-};
+}
+
+interface GeolocationState {
+  geolocation: Geolocation | null;
+  isLoading: boolean;
+  error: CustomGeoLocationError | null;
+}
 
 export default function useGeolocation() {
-  const [geolocation, setGeolocation] = useState<Geolocation | null>(null);
+  const [state, setState] = useState<GeolocationState>({
+    geolocation: null,
+    isLoading: true,
+    error: null,
+  });
+
+  const checkGeolocationSupport = useCallback(() => {
+    if (typeof window === 'undefined' || navigator.geolocation === undefined) {
+      setState((prev) => ({
+        ...prev,
+        loading: false,
+        error: new CustomGeoLocationError({
+          code: 0,
+          message: 'Geolocation is not supported by this environment.',
+        }),
+      }));
+
+      return false;
+    }
+
+    return true;
+  }, []);
+
+  const handleSuccess = useCallback((position: GeolocationPosition) => {
+    const { coords } = position;
+
+    setState((prev) => ({
+      ...prev,
+      geolocation: {
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+      },
+      isLoading: false,
+    }));
+  }, []);
+
+  const handleError = useCallback((error: GeolocationPositionError) => {
+    const { code, message } = error;
+
+    setState((prev) => ({
+      ...prev,
+      error: new CustomGeoLocationError({
+        code,
+        message,
+      }),
+      isLoading: false,
+    }));
+  }, []);
 
   useEffect(() => {
-    if (!navigator.geolocation) {
-      toast.error('위치 정보 기능을 지원하지 않는 브라우저입니다.');
+    const { geolocation } = navigator;
+
+    if (!checkGeolocationSupport()) {
       return;
     }
 
-    const successCallback = (position: GeolocationPosition) => {
-      setGeolocation({
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
-      });
-    };
+    geolocation.getCurrentPosition(handleSuccess, handleError);
+  }, [checkGeolocationSupport, handleSuccess, handleError]);
 
-    const errorCallback = (error: GeolocationPositionError) => {
-      toast.error(getErrorMessage(error));
-      setGeolocation(DEFAULT_LOCATION);
-    };
-
-    navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+  const updateGeolocation = useCallback((geolocation: Geolocation) => {
+    setState((prev) => ({ ...prev, geolocation }));
   }, []);
 
-  const updateGeolocation = (geolocation: Geolocation) => {
-    setGeolocation(geolocation);
-  };
-
-  return { geolocation, updateGeolocation };
+  return { ...state, updateGeolocation };
 }

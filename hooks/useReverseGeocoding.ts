@@ -1,27 +1,12 @@
-import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { extractErrorMessage } from '@/lib/utils';
-import { fetchReverseGeocode } from '@/services/geocodingAPI';
+import geocodingQueries from '@/queries/geocodingQueries';
 import { Geolocation } from '@/types/geolocation';
 
-export default function useReverseGeocoding(geolocation: Geolocation | null) {
-  const [address, setAddress] = useState<string | null>(null);
+export default function useReverseGeocoding(geolocation: Geolocation) {
+  const { data: address, error } = useSuspenseQuery(
+    geocodingQueries.reverseGeocode(geolocation),
+  );
 
-  useEffect(() => {
-    if (!geolocation) {
-      return;
-    }
-
-    (async () => {
-      try {
-        const response = await fetchReverseGeocode(geolocation);
-        setAddress(response.results[0].formatted_address);
-      } catch (error) {
-        toast.error(extractErrorMessage(error));
-      }
-    })();
-  }, [geolocation]);
-
-  return address;
+  return { address, error };
 }

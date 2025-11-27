@@ -5,7 +5,7 @@
     "es6": true,
     "node": true
   },
-  "plugins": ["prettier"],
+  "plugins": ["prettier", "@tanstack/query"],
   "extends": [
     "airbnb",
     "airbnb-typescript",
@@ -14,7 +14,8 @@
     "plugin:@typescript-eslint/recommended-type-checked",
     "plugin:@typescript-eslint/stylistic-type-checked",
     "plugin:prettier/recommended",
-    "prettier"
+    "prettier",
+    "plugin:@tanstack/eslint-plugin-query/recommended"
   ],
   "rules": {
     "react/react-in-jsx-scope": "off",

@@ -4,6 +4,7 @@ import { Toaster } from 'sonner';
 
 import '@/app/globals.css';
 import OverlayProvider from '@/providers/OverlayProvider';
+import QueryProvider from '@/providers/QueryProvider';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -30,7 +31,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <OverlayProvider>{children}</OverlayProvider>
+        <QueryProvider>
+          <OverlayProvider>{children}</OverlayProvider>
+        </QueryProvider>
         <Toaster position="bottom-center" />
       </body>
     </html>

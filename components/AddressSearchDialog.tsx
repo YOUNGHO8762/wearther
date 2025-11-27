@@ -1,5 +1,8 @@
 'use client';
 
+import { useState } from 'react';
+import { toast } from 'sonner';
+
 import AddressSearchForm from '@/components/AddressSearchForm';
 import {
   Dialog,
@@ -7,6 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import useErrorToast from '@/hooks/useErrorToast';
 import useSearchAddress from '@/hooks/useSearchAddress';
 import { extractErrorMessage } from '@/lib/utils';
 import { fetchLocationByPlaceID } from '@/services/addressAPI';
@@ -19,12 +23,20 @@ interface Props {
 }
 
 export default function AddressSearchDialog({ isOpen, close, onExit }: Props) {
-  const { addresses, searchAddress } = useSearchAddress();
+  const [submittedSearchTerm, setSubmittedSearchTerm] = useState('');
+  const { addresses, error } = useSearchAddress(submittedSearchTerm);
+  useErrorToast(error);
 
   const handleAnimationEnd = () => {
-    if (!isOpen) {
-      onExit();
+    if (isOpen) {
+      return;
     }
+
+    onExit();
+  };
+
+  const handleSubmittedSearchTermChange = (searchTerm: string) => {
+    setSubmittedSearchTerm(searchTerm);
   };
 
   const handleAddressClick = async (placeID: string) => {
@@ -36,7 +48,7 @@ export default function AddressSearchDialog({ isOpen, close, onExit }: Props) {
         longitude: lng,
       });
     } catch (error) {
-      extractErrorMessage(error);
+      toast.error(extractErrorMessage(error));
     }
   };
 
@@ -51,7 +63,9 @@ export default function AddressSearchDialog({ isOpen, close, onExit }: Props) {
           <DialogTitle>주소 검색</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
-          <AddressSearchForm searchAddress={searchAddress} />
+          <AddressSearchForm
+            onSubmittedSearchTermChange={handleSubmittedSearchTermChange}
+          />
           {addresses && !addresses?.length && (
             <p className="text-muted-foreground py-4 text-center">
               검색 결과가 없습니다.

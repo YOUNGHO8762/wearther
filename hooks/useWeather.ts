@@ -1,28 +1,12 @@
-import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { extractErrorMessage } from '@/lib/utils';
-import { fetchWeather } from '@/services/weatherAPI';
+import weatherQueries from '@/queries/weatherQueries';
 import { Geolocation } from '@/types/geolocation';
-import { FetchWeatherResponse } from '@/types/weather';
 
-export default function useWeather(geolocation: Geolocation | null) {
-  const [weather, setWeather] = useState<FetchWeatherResponse | null>(null);
+export default function useWeather(geolocation: Geolocation) {
+  const { data: weather, error } = useSuspenseQuery(
+    weatherQueries.weather(geolocation),
+  );
 
-  useEffect(() => {
-    if (!geolocation) {
-      return;
-    }
-
-    (async () => {
-      try {
-        const response = await fetchWeather(geolocation);
-        setWeather(response);
-      } catch (error) {
-        toast.error(extractErrorMessage(error));
-      }
-    })();
-  }, [geolocation]);
-
-  return weather;
+  return { weather, error };
 }

@@ -1,21 +1,12 @@
-import { useState } from 'react';
-import { toast } from 'sonner';
+import { useQuery } from '@tanstack/react-query';
 
-import { extractErrorMessage } from '@/lib/utils';
-import { fetchAddresses } from '@/services/addressAPI';
-import { Predictions } from '@/types/address';
+import addressQueries from '@/queries/addressQueries';
 
-export default function useSearchAddress() {
-  const [addresses, setAddresses] = useState<Predictions[] | null>(null);
+export default function useSearchAddress(searchTerm: string) {
+  const { data: addresses, error } = useQuery({
+    ...addressQueries.search(searchTerm),
+    enabled: !!searchTerm,
+  });
 
-  const searchAddress = async (searchTerm: string) => {
-    try {
-      const response = await fetchAddresses(searchTerm);
-      setAddresses(response);
-    } catch (error) {
-      toast.error(extractErrorMessage(error));
-    }
-  };
-
-  return { addresses, searchAddress };
+  return { addresses, error };
 }
