@@ -1,5 +1,3 @@
-import { useRef } from 'react';
-
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import useInputState from '@/hooks/useInputState';
@@ -12,10 +10,8 @@ export default function AddressSearchForm({
   onSubmittedSearchTermChange,
 }: Props) {
   const [searchTerm, handleSearchTermChange] = useInputState();
-  const lastSearchTermRef = useRef<string>('');
 
-  const disabled =
-    !searchTerm.trim() || searchTerm === lastSearchTermRef.current;
+  const disabled = !searchTerm.trim();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -25,7 +21,6 @@ export default function AddressSearchForm({
     }
 
     onSubmittedSearchTermChange(searchTerm);
-    lastSearchTermRef.current = searchTerm;
   };
 
   return (

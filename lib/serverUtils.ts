@@ -37,17 +37,26 @@ export function createServerErrorResponse(
   return createErrorResponse(message, 500);
 }
 
-export function createCatchErrorResponse(error: unknown) {
-  if (isAxiosError(error)) {
-    const axiosError = error as ServerError;
-    return createErrorResponse(
-      axiosError.response.data.error_message ??
-        axiosError.response.data.message ??
-        DEFAULT_SERVER_ERROR_MESSAGE,
-      axiosError.response.status ?? 500,
-    );
+export function isServerError(error: unknown): error is ServerError {
+  if (!isAxiosError<Partial<ServerError['response']['data']>>(error)) {
+    return false;
   }
 
+  return (
+    typeof error.response?.data?.error_message === 'string' ||
+    typeof error.response?.data?.message === 'string'
+  );
+}
+
+export function createCatchErrorResponse(error: unknown) {
+  if (isServerError(error)) {
+    return createErrorResponse(
+      error.response.data.error_message ??
+        error.response.data.message ??
+        DEFAULT_SERVER_ERROR_MESSAGE,
+      error.response.status ?? 500,
+    );
+  }
   return createServerErrorResponse(
     extractErrorMessage(error, DEFAULT_SERVER_ERROR_MESSAGE),
   );

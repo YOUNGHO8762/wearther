@@ -25,58 +25,58 @@ export default function useGeolocation() {
     error: null,
   });
 
-  const checkGeolocationSupport = useCallback(() => {
-    if (typeof window === 'undefined' || navigator.geolocation === undefined) {
-      setState((prev) => ({
-        ...prev,
-        loading: false,
-        error: new CustomGeoLocationError({
-          code: 0,
-          message: 'Geolocation is not supported by this environment.',
-        }),
-      }));
-
-      return false;
-    }
-
-    return true;
-  }, []);
-
-  const handleSuccess = useCallback((position: GeolocationPosition) => {
-    const { coords } = position;
-
-    setState((prev) => ({
-      ...prev,
-      geolocation: {
-        latitude: coords.latitude,
-        longitude: coords.longitude,
-      },
-      isLoading: false,
-    }));
-  }, []);
-
-  const handleError = useCallback((error: GeolocationPositionError) => {
-    const { code, message } = error;
-
-    setState((prev) => ({
-      ...prev,
-      error: new CustomGeoLocationError({
-        code,
-        message,
-      }),
-      isLoading: false,
-    }));
-  }, []);
-
   useEffect(() => {
     const { geolocation } = navigator;
+
+    const checkGeolocationSupport = () => {
+      if (typeof window === 'undefined' || geolocation === undefined) {
+        setState((prev) => ({
+          ...prev,
+          loading: false,
+          error: new CustomGeoLocationError({
+            code: 0,
+            message: 'Geolocation is not supported by this environment.',
+          }),
+        }));
+
+        return false;
+      }
+
+      return true;
+    };
+
+    const handleSuccess = (position: GeolocationPosition) => {
+      const { coords } = position;
+
+      setState((prev) => ({
+        ...prev,
+        geolocation: {
+          latitude: coords.latitude,
+          longitude: coords.longitude,
+        },
+        isLoading: false,
+      }));
+    };
+
+    const handleError = (error: GeolocationPositionError) => {
+      const { code, message } = error;
+
+      setState((prev) => ({
+        ...prev,
+        error: new CustomGeoLocationError({
+          code,
+          message,
+        }),
+        isLoading: false,
+      }));
+    };
 
     if (!checkGeolocationSupport()) {
       return;
     }
 
     geolocation.getCurrentPosition(handleSuccess, handleError);
-  }, [checkGeolocationSupport, handleSuccess, handleError]);
+  }, []);
 
   const updateGeolocation = useCallback((geolocation: Geolocation) => {
     setState((prev) => ({ ...prev, geolocation }));

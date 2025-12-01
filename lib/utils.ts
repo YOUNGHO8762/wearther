@@ -8,15 +8,23 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function extractErrorMessage(
-  error: unknown,
-  defaultMessage = '오류가 발생했습니다.',
-): string {
-  if (isAxiosError(error)) {
-    return (error as ClientError).response.data.error ?? defaultMessage;
+export function isClientError(error: unknown): error is ClientError {
+  if (!isAxiosError<Partial<ClientError['response']['data']>>(error)) {
+    return false;
   }
 
-  return defaultMessage;
+  return typeof error.response?.data?.error === 'string';
+}
+
+export function extractErrorMessage(
+  error: unknown,
+  defaultMessage = 'An unexpected error has occurred.',
+): string {
+  if (isClientError(error)) {
+    return error.response.data.error;
+  }
+
+  return isAxiosError(error) ? error.message : defaultMessage;
 }
 
 export function isValidLatitude(latitude: string | null): boolean {
