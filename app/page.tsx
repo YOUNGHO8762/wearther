@@ -5,6 +5,7 @@ import { Suspense } from 'react';
 
 import AddressSearchDialog from '@/components/AddressSearchDialog';
 import WeatherCard from '@/components/WeatherCard';
+import WeatherCardSkeleton from '@/components/WeatherCardSkeleton';
 import useErrorToast from '@/hooks/useErrorToast';
 import useGeolocation from '@/hooks/useGeolocation';
 import { Geolocation } from '@/types/geolocation';
@@ -39,7 +40,7 @@ export default function Home() {
   return (
     <div className="flex min-h-dvh items-center justify-center bg-gradient-to-br from-blue-100 to-blue-300">
       {!isLoading && (
-        <Suspense fallback={null}>
+        <Suspense fallback={<WeatherCardSkeleton />}>
           <WeatherCard
             geolocation={geolocation ?? DEFAULT_LOCATION}
             onAddressSearchClick={handleAddressSearchClick}

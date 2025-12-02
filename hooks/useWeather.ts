@@ -4,9 +4,9 @@ import weatherQueries from '@/queries/weatherQueries';
 import { Geolocation } from '@/types/geolocation';
 
 export default function useWeather(geolocation: Geolocation) {
-  const { data: weather, error } = useSuspenseQuery(
+  const { data: weather } = useSuspenseQuery(
     weatherQueries.weather(geolocation),
   );
 
-  return { weather, error };
+  return weather;
 }

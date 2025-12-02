@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import useErrorToast from '@/hooks/useErrorToast';
 import useReverseGeocoding from '@/hooks/useReverseGeocoding';
 import useWeather from '@/hooks/useWeather';
 import { getClothingRecommendations, getRoundNumber } from '@/lib/utils';
@@ -21,10 +20,8 @@ export default function WeatherCard({
   geolocation,
   onAddressSearchClick,
 }: Props) {
-  const { weather, error: weatherError } = useWeather(geolocation);
-  useErrorToast(weatherError);
-  const { address, error: addressError } = useReverseGeocoding(geolocation);
-  useErrorToast(addressError);
+  const weather = useWeather(geolocation);
+  const address = useReverseGeocoding(geolocation);
 
   const { current, daily } = weather;
   const {
@@ -49,7 +46,7 @@ export default function WeatherCard({
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <span>현재 날씨</span>
-          <Badge variant="outline" className="px-2 py-1 text-base">
+          <Badge variant="outline" className="text-base">
             {currentWeather.description}
           </Badge>
         </CardTitle>
