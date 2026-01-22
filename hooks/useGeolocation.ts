@@ -32,7 +32,7 @@ export default function useGeolocation() {
       if (typeof window === 'undefined' || geolocation === undefined) {
         setState((prev) => ({
           ...prev,
-          loading: false,
+          isLoading: false,
           error: new CustomGeoLocationError({
             code: 0,
             message: 'Geolocation is not supported by this environment.',

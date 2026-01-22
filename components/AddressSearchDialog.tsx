@@ -66,12 +66,12 @@ export default function AddressSearchDialog({ isOpen, close, onExit }: Props) {
           <AddressSearchForm
             onSubmittedSearchTermChange={handleSubmittedSearchTermChange}
           />
-          {addresses && !addresses?.length && (
+          {addresses?.length === 0 && (
             <p className="text-muted-foreground py-4 text-center">
               검색 결과가 없습니다.
             </p>
           )}
-          {!!addresses?.length && (
+          {addresses && addresses.length > 0 && (
             <ul className="max-h-60 space-y-1 overflow-y-auto">
               {addresses.map((address) => (
                 <li key={address.place_id}>
