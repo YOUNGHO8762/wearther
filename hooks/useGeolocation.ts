@@ -30,7 +30,7 @@ export default function useGeolocation() {
 
     const checkGeolocationSupport = () => {
       if (typeof window === 'undefined' || geolocation === undefined) {
-        setState((prev) => ({
+        setState((prev: GeolocationState) => ({
           ...prev,
           isLoading: false,
           error: new CustomGeoLocationError({
@@ -48,7 +48,7 @@ export default function useGeolocation() {
     const handleSuccess = (position: GeolocationPosition) => {
       const { coords } = position;
 
-      setState((prev) => ({
+      setState((prev: GeolocationState) => ({
         ...prev,
         geolocation: {
           latitude: coords.latitude,
@@ -61,7 +61,7 @@ export default function useGeolocation() {
     const handleError = (error: GeolocationPositionError) => {
       const { code, message } = error;
 
-      setState((prev) => ({
+      setState((prev: GeolocationState) => ({
         ...prev,
         error: new CustomGeoLocationError({
           code,
@@ -79,7 +79,7 @@ export default function useGeolocation() {
   }, []);
 
   const updateGeolocation = useCallback((geolocation: Geolocation) => {
-    setState((prev) => ({ ...prev, geolocation }));
+    setState((prev: GeolocationState) => ({ ...prev, geolocation }));
   }, []);
 
   return { ...state, updateGeolocation };

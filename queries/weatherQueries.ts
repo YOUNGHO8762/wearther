@@ -5,10 +5,11 @@ import { Geolocation } from '@/types/geolocation';
 
 const weatherQueries = {
   all: () => ['weather'],
-  weather: (geolocation: Geolocation) =>
+  byGeolocations: () => [...weatherQueries.all(), 'byGeolocation'],
+  byGeolocation: (geolocation: Geolocation) =>
     queryOptions({
       staleTime: 1000 * 60 * 30,
-      queryKey: [...weatherQueries.all(), geolocation],
+      queryKey: [...weatherQueries.byGeolocations(), geolocation],
       queryFn: () => fetchWeather(geolocation),
     }),
 };

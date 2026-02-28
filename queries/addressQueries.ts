@@ -8,7 +8,6 @@ const addressQueries = {
   search: (searchTerm: string) =>
     queryOptions({
       staleTime: Infinity,
-      gcTime: Infinity,
       queryKey: [...addressQueries.searches(), searchTerm],
       queryFn: () => fetchAddresses(searchTerm),
     }),
