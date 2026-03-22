@@ -29,7 +29,9 @@ export default function AddressSearchForm({
         placeholder="주소를 입력하세요"
         value={searchTerm}
         onChange={handleSearchTermChange}
-        aria-label="주소"
+        aria-label="주소 검색"
+        name="address"
+        autoComplete="street-address"
         required
       />
       <Button type="submit" disabled={disabled}>

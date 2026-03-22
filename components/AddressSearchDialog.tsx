@@ -66,18 +66,23 @@ export default function AddressSearchDialog({ isOpen, close, onExit }: Props) {
           <AddressSearchForm
             onSubmittedSearchTermChange={handleSubmittedSearchTermChange}
           />
-          {addresses?.length === 0 && (
-            <p className="text-muted-foreground py-4 text-center">
-              검색 결과가 없습니다.
-            </p>
-          )}
+          <div aria-live="polite" aria-atomic="true">
+            {addresses?.length === 0 && (
+              <p className="text-muted-foreground py-4 text-center">
+                검색 결과가 없습니다.
+              </p>
+            )}
+            {addresses && addresses.length > 0 && (
+              <p className="sr-only">검색 결과 : {addresses.length}개</p>
+            )}
+          </div>
           {addresses && addresses.length > 0 && (
-            <ul className="max-h-60 space-y-1 overflow-y-auto">
+            <ul className="max-h-60 space-y-1 overflow-y-auto overscroll-contain">
               {addresses.map((address) => (
                 <li key={address.place_id}>
                   <button
                     type="button"
-                    className="hover:bg-muted focus:bg-muted w-full cursor-pointer rounded-md p-3 text-start text-sm transition-colors focus:outline-none"
+                    className="w-full cursor-pointer rounded-md p-3 text-start text-sm transition-colors focus-visible:ring-2 focus-visible:outline-none"
                     onClick={() => handleAddressClick(address.place_id)}
                   >
                     {address.description}

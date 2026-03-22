@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import useIsMounted from '@/hooks/useIsMounted';
 import useReverseGeocoding from '@/hooks/useReverseGeocoding';
 import useWeather from '@/hooks/useWeather';
 import { getClothingRecommendations, getRoundNumber } from '@/lib/utils';
@@ -34,6 +35,8 @@ export default function WeatherCard({
   const currentWeather = weatherInfo[0];
   const { temp: todayTemp } = daily[0];
 
+  const isMounted = useIsMounted();
+
   const clothingRecommendations = getClothingRecommendations({
     maxTemp: todayTemp.max,
     minTemp: todayTemp.min,
@@ -42,7 +45,10 @@ export default function WeatherCard({
   });
 
   return (
-    <Card className="w-[350px] shadow-xl">
+    <Card className="w-full max-w-[350px] shadow-xl">
+      <div aria-live="polite" aria-atomic="true" className="sr-only">
+        {isMounted && '날씨 및 위치 정보를 불러왔습니다'}
+      </div>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <span>현재 날씨</span>
@@ -59,6 +65,7 @@ export default function WeatherCard({
               alt=""
               width={64}
               height={64}
+              priority
             />
           </div>
           <p className="text-3xl font-bold" aria-label="현재 온도">
@@ -68,8 +75,8 @@ export default function WeatherCard({
             className="text-center text-sm text-gray-500"
             aria-label="오늘의 최저 최고 온도"
           >
-            (최저 {getRoundNumber(todayTemp.min)}° / 최고{' '}
-            {getRoundNumber(todayTemp.max)}°)
+            (최저 {getRoundNumber(todayTemp.min)}°C / 최고{' '}
+            {getRoundNumber(todayTemp.max)}°C)
           </p>
           <p className="text-sm text-gray-700">
             체감온도 : {getRoundNumber(feelsLike)}°C

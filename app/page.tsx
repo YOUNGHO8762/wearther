@@ -1,7 +1,7 @@
 'use client';
 
 import { overlay } from 'overlay-kit';
-import { Suspense } from 'react';
+import { Suspense, useCallback } from 'react';
 
 import AddressSearchDialog from '@/components/AddressSearchDialog';
 import WeatherCard from '@/components/WeatherCard';
@@ -19,7 +19,7 @@ export default function Home() {
   const { geolocation, isLoading, error, updateGeolocation } = useGeolocation();
   useErrorToast(error);
 
-  const handleAddressSearchClick = async () => {
+  const handleAddressSearchClick = useCallback(async () => {
     const selectedGeolocation = await overlay.openAsync<
       Geolocation | undefined
     >(({ isOpen, close, unmount }) => (
@@ -35,20 +35,22 @@ export default function Home() {
     }
 
     updateGeolocation(selectedGeolocation);
-  };
+  }, [updateGeolocation]);
 
   return (
-    <div className="flex min-h-dvh items-center justify-center bg-gradient-to-br from-blue-100 to-blue-300">
+    <main className="flex min-h-dvh items-center justify-center bg-gradient-to-br from-blue-100 to-blue-300">
       {isLoading ? (
-        <WeatherCardSkeleton />
+        <WeatherCardSkeleton label="위치 정보 불러오는 중" />
       ) : (
-        <Suspense fallback={<WeatherCardSkeleton />}>
+        <Suspense
+          fallback={<WeatherCardSkeleton label="날씨 정보 불러오는 중" />}
+        >
           <WeatherCard
             geolocation={geolocation ?? DEFAULT_LOCATION}
             onAddressSearchClick={handleAddressSearchClick}
           />
         </Suspense>
       )}
-    </div>
+    </main>
   );
 }

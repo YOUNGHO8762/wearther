@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'weather',
+  title: 'Wearther',
   description: '온도에 따른 옷차림 추천',
 };
 
