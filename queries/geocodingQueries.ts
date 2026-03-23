@@ -11,7 +11,7 @@ const geocodingQueries = {
       staleTime: Infinity,
       queryKey: [...geocodingQueries.reverseGeocodes(), geolocation],
       queryFn: () => fetchReverseGeocode(geolocation),
-      select: (data) => data.results[0].formatted_address,
+      select: (data) => data.results?.[0]?.formatted_address ?? '',
     }),
 };
 

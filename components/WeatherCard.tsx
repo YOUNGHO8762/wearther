@@ -83,7 +83,7 @@ export default function WeatherCard({
           </p>
         </div>
         <div className="space-y-1">
-          <div className="flex items-center justify-between" aria-label="위치">
+          <div className="flex items-center justify-between">
             <p className="flex items-center gap-1">
               <MapPin className="h-4 w-4 text-gray-500" />
               <span className="text-sm text-gray-600">{address}</span>

@@ -24,7 +24,11 @@ export default function AddressSearchForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex items-center gap-2">
+    <form
+      onSubmit={handleSubmit}
+      role="search"
+      className="flex items-center gap-2"
+    >
       <Input
         placeholder="주소를 입력하세요"
         value={searchTerm}
