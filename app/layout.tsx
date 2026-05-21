@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import { Toaster } from 'sonner';
 
 import '@/app/globals.css';
-import OverlayProvider from '@/providers/OverlayProvider';
 import QueryProvider from '@/providers/QueryProvider';
 
 const geistSans = Geist({
@@ -31,9 +30,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <QueryProvider>
-          <OverlayProvider>{children}</OverlayProvider>
-        </QueryProvider>
+        <QueryProvider>{children}</QueryProvider>
         <Toaster position="bottom-center" />
       </body>
     </html>

@@ -1,3 +1,5 @@
+import { GoogleMapsStatus } from '@/types/googleMaps';
+
 export interface Geolocation {
   latitude: number;
   longitude: number;
@@ -35,5 +37,6 @@ export interface FetchReverseGeocodeResponse {
     };
     types: string[];
   }[];
-  status: string;
+  status: GoogleMapsStatus;
+  error_message?: string;
 }

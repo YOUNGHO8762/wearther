@@ -24,47 +24,29 @@ export function extractErrorMessage(
     return error.response.data.error;
   }
 
-  return isAxiosError(error) ? error.message : defaultMessage;
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  return defaultMessage;
 }
 
-export function isValidLatitude(latitude: string | null): boolean {
+export function isValidLatitude(latitude: string | null): latitude is string {
   if (!latitude || latitude.trim() === '') {
     return false;
   }
-
   const lat = parseFloat(latitude);
-
-  if (Number.isNaN(lat)) {
-    return false;
-  }
-
-  if (lat < -90 || lat > 90) {
-    return false;
-  }
-
-  return true;
+  return !Number.isNaN(lat) && lat >= -90 && lat <= 90;
 }
 
-export function isValidLongitude(longitude: string | null): boolean {
+export function isValidLongitude(
+  longitude: string | null,
+): longitude is string {
   if (!longitude || longitude.trim() === '') {
     return false;
   }
-
   const lng = parseFloat(longitude);
-
-  if (Number.isNaN(lng)) {
-    return false;
-  }
-
-  if (lng < -180 || lng > 180) {
-    return false;
-  }
-
-  return true;
-}
-
-export function getRoundNumber(value: number | undefined, defaultValue = '') {
-  return value === undefined ? defaultValue : Math.round(value);
+  return !Number.isNaN(lng) && lng >= -180 && lng <= 180;
 }
 
 function calculateWindChill(temp: number, windSpeed: number): number {
@@ -82,7 +64,9 @@ function calculateWindChill(temp: number, windSpeed: number): number {
 }
 
 function calculateHeatIndex(temp: number, humidity: number): number {
-  if (temp < 27) return temp;
+  if (temp < 27) {
+    return temp;
+  }
 
   const T = temp;
   const RH = humidity;

@@ -7,8 +7,10 @@ import AddressSearchForm from '@/components/AddressSearchForm';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from '@/components/ui/dialog';
 import useErrorToast from '@/hooks/useErrorToast';
 import useSearchAddress from '@/hooks/useSearchAddress';
@@ -17,54 +19,49 @@ import { fetchLocationByPlaceID } from '@/services/addressAPI';
 import { Geolocation } from '@/types/geolocation';
 
 interface Props {
-  isOpen: boolean;
-  close: (geolocation?: Geolocation) => void;
-  onExit: () => void;
+  children: React.ReactNode;
+  onSelect: (geolocation: Geolocation) => void;
 }
 
-export default function AddressSearchDialog({ isOpen, close, onExit }: Props) {
+export default function AddressSearchDialog({ children, onSelect }: Props) {
+  const [open, setOpen] = useState(false);
   const [submittedSearchTerm, setSubmittedSearchTerm] = useState('');
   const { addresses, error } = useSearchAddress(submittedSearchTerm);
   useErrorToast(error);
-
-  const handleAnimationEnd = () => {
-    if (isOpen) {
-      return;
-    }
-
-    onExit();
-  };
-
-  const handleSubmittedSearchTermChange = (searchTerm: string) => {
-    setSubmittedSearchTerm(searchTerm);
-  };
 
   const handleAddressClick = async (placeID: string) => {
     try {
       const { lat, lng } = await fetchLocationByPlaceID(placeID);
 
-      close({
+      onSelect({
         latitude: lat,
         longitude: lng,
       });
+      setOpen(false);
     } catch (error) {
       toast.error(extractErrorMessage(error));
     }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && close()}>
-      <DialogContent
-        className="max-w-md"
-        onAnimationEnd={handleAnimationEnd}
-        showCloseButton
-      >
+    <Dialog
+      open={open}
+      onOpenChange={(isOpen) => {
+        setOpen(isOpen);
+        if (!isOpen) setSubmittedSearchTerm('');
+      }}
+    >
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent className="max-w-md" showCloseButton>
         <DialogHeader>
           <DialogTitle>주소 검색</DialogTitle>
+          <DialogDescription className="sr-only">
+            주소를 검색하여 위치를 변경하세요
+          </DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
           <AddressSearchForm
-            onSubmittedSearchTermChange={handleSubmittedSearchTermChange}
+            onSubmittedSearchTermChange={setSubmittedSearchTerm}
           />
           <div aria-live="polite" aria-atomic="true">
             {addresses?.length === 0 && (

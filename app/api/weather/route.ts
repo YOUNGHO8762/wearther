@@ -29,7 +29,6 @@ export async function GET(request: NextRequest) {
     const params = {
       lat,
       lon,
-      dt: Math.floor(Date.now() / 1000),
       appid: API_KEY,
       exclude: 'minutely,hourly,alerts',
       units: 'metric',

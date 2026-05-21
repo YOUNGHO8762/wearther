@@ -1,3 +1,5 @@
+import { GoogleMapsStatus } from '@/types/googleMaps';
+
 export interface Predictions {
   description: string;
   place_id: string;
@@ -5,7 +7,8 @@ export interface Predictions {
 
 export interface FetchAddressResponse {
   predictions: Predictions[];
-  status: string;
+  status: GoogleMapsStatus;
+  error_message?: string;
 }
 
 export interface FetchLocationByPlaceIDResponse {
@@ -17,4 +20,6 @@ export interface FetchLocationByPlaceIDResponse {
       };
     };
   };
+  status: GoogleMapsStatus;
+  error_message?: string;
 }

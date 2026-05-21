@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import {
   createAPIKeyErrorResponse,
   createCatchErrorResponse,
+  createGoogleMapsErrorResponse,
   createParamsErrorResponse,
 } from '@/lib/serverUtils';
 import { isValidLatitude, isValidLongitude } from '@/lib/utils';
@@ -37,7 +38,9 @@ export async function GET(request: NextRequest) {
       },
     );
 
-    return NextResponse.json(response);
+    return (
+      createGoogleMapsErrorResponse(response) ?? NextResponse.json(response)
+    );
   } catch (error) {
     return createCatchErrorResponse(error);
   }

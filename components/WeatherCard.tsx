@@ -3,24 +3,22 @@
 import { MapPin, Search } from 'lucide-react';
 import Image from 'next/image';
 
+import AddressSearchDialog from '@/components/AddressSearchDialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import useIsMounted from '@/hooks/useIsMounted';
 import useReverseGeocoding from '@/hooks/useReverseGeocoding';
 import useWeather from '@/hooks/useWeather';
-import { getClothingRecommendations, getRoundNumber } from '@/lib/utils';
+import { getClothingRecommendations } from '@/lib/utils';
 import { Geolocation } from '@/types/geolocation';
 
 interface Props {
   geolocation: Geolocation;
-  onAddressSearchClick: () => void;
+  onSelectAddress: (geolocation: Geolocation) => void;
 }
 
-export default function WeatherCard({
-  geolocation,
-  onAddressSearchClick,
-}: Props) {
+export default function WeatherCard({ geolocation, onSelectAddress }: Props) {
   const weather = useWeather(geolocation);
   const address = useReverseGeocoding(geolocation);
 
@@ -63,23 +61,24 @@ export default function WeatherCard({
             <Image
               src={`https://openweathermap.org/img/wn/${currentWeather.icon}.png`}
               alt=""
+              aria-hidden
               width={64}
               height={64}
               priority
             />
           </div>
           <p className="text-3xl font-bold" aria-label="현재 온도">
-            {getRoundNumber(temp)}°C
+            {Math.round(temp)}°C
           </p>
           <p
             className="text-center text-sm text-gray-500"
             aria-label="오늘의 최저 최고 온도"
           >
-            (최저 {getRoundNumber(todayTemp.min)}°C / 최고{' '}
-            {getRoundNumber(todayTemp.max)}°C)
+            (최저 {Math.round(todayTemp.min)}°C / 최고{' '}
+            {Math.round(todayTemp.max)}°C)
           </p>
           <p className="text-sm text-gray-700">
-            체감온도 : {getRoundNumber(feelsLike)}°C
+            체감온도 : {Math.round(feelsLike)}°C
           </p>
         </div>
         <div className="space-y-1">
@@ -89,16 +88,12 @@ export default function WeatherCard({
               <span className="text-sm text-gray-600">{address}</span>
             </p>
           </div>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={onAddressSearchClick}
-            aria-haspopup="dialog"
-          >
-            <Search className="h-3.5 w-3.5" />
-            위치 변경
-          </Button>
+          <AddressSearchDialog onSelect={onSelectAddress}>
+            <Button type="button" variant="outline" size="sm">
+              <Search className="h-3.5 w-3.5" />
+              위치 변경
+            </Button>
+          </AddressSearchDialog>
           <p className="text-sm">습도 : {humidity}%</p>
           <p className="text-sm">풍속 : {windSpeed} m/s</p>
           <ul className="flex flex-wrap gap-1" aria-label="옷차림 추천">

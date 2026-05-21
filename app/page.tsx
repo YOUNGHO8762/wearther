@@ -1,9 +1,7 @@
 'use client';
 
-import { overlay } from 'overlay-kit';
-import { Suspense, useCallback } from 'react';
+import { Suspense, useCallback, useTransition } from 'react';
 
-import AddressSearchDialog from '@/components/AddressSearchDialog';
 import WeatherCard from '@/components/WeatherCard';
 import WeatherCardSkeleton from '@/components/WeatherCardSkeleton';
 import useErrorToast from '@/hooks/useErrorToast';
@@ -17,28 +15,19 @@ const DEFAULT_LOCATION: Geolocation = {
 
 export default function Home() {
   const { geolocation, isLoading, error, updateGeolocation } = useGeolocation();
+  const [, startTransition] = useTransition();
   useErrorToast(error);
 
-  const handleAddressSearchClick = useCallback(async () => {
-    const selectedGeolocation = await overlay.openAsync<
-      Geolocation | undefined
-    >(({ isOpen, close, unmount }) => (
-      <AddressSearchDialog
-        isOpen={isOpen}
-        close={(geolocation?: Geolocation) => close(geolocation)}
-        onExit={unmount}
-      />
-    ));
-
-    if (!selectedGeolocation) {
-      return;
-    }
-
-    updateGeolocation(selectedGeolocation);
-  }, [updateGeolocation]);
+  const handleSelectAddress = useCallback(
+    (geolocation: Geolocation) => {
+      startTransition(() => updateGeolocation(geolocation));
+    },
+    [updateGeolocation],
+  );
 
   return (
     <main className="flex min-h-dvh items-center justify-center bg-gradient-to-br from-blue-100 to-blue-300">
+      <h1 className="sr-only">Wearther — 온도별 옷차림 추천</h1>
       {isLoading ? (
         <WeatherCardSkeleton label="위치 정보 불러오는 중" />
       ) : (
@@ -47,7 +36,7 @@ export default function Home() {
         >
           <WeatherCard
             geolocation={geolocation ?? DEFAULT_LOCATION}
-            onAddressSearchClick={handleAddressSearchClick}
+            onSelectAddress={handleSelectAddress}
           />
         </Suspense>
       )}
